@@ -5,7 +5,7 @@ export const SITE_URL = "https://brooksidemotel.co.nz";
 export const PHONE_DISPLAY = "+64 3 930 0060";
 export const PHONE_TEL = "tel:+6439300060";
 export const EMAIL_RESERVATIONS = "reservations@brooksidemotel.co.nz";
-export const EMAIL_STAY = "stay@brooksidemotel.co.nz";
+export const EMAIL_STAY = "reservations@brooksidemotel.co.nz";
 export const STREET = "12 Brookside Road, Rolleston 7614, Canterbury";
 export const ADDRESS_LINES = ["12 Brookside Rd, Rolleston", "Canterbury 7614, New Zealand"];
 

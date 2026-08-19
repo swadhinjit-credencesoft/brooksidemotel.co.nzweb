@@ -36,7 +36,7 @@ export default function SiteFooter() {
               <p className="footer-note">
                 Brand-new luxury motel accommodation in Rolleston, Canterbury.
               </p>
-              <div className="socials">
+              {/* <div className="socials">
                 <a href="#" aria-label="Facebook" data-todo="social-url">
                   <svg
                     width="15"
@@ -63,7 +63,7 @@ export default function SiteFooter() {
                     <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
                   </svg>
                 </a>
-              </div>
+              </div> */}
             </div>
             <div>
               <h6>Quick links</h6>
