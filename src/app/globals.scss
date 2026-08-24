@@ -787,3 +787,91 @@ table.facts td:first-child{font-weight:600;color:var(--pine);}
 .nav-panel .btn{margin-top:var(--s3);}
 
 /* Hero still frame sits under the video as fallback. */
+
+/* ============================================================
+   ROOM DETAIL PAGES  (/motel-rooms/[id])
+   ============================================================ */
+.rd-intro{display:grid;grid-template-columns:1.6fr 1fr;gap:var(--s6);align-items:start;}
+.rd-copy h2{margin-bottom:10px;}
+.rd-copy .lead{color:var(--charcoal);margin-bottom:var(--s3);}
+.rd-copy>p:last-of-type{color:var(--sage-text);font-size:15.5px;margin:0;}
+.rd-aside{position:sticky;top:110px;}
+.rd-card{background:var(--paper-white);border-radius:var(--r-card);border-top:3px solid var(--pine);
+  box-shadow:0 18px 50px rgba(31,45,41,.12);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3);}
+.rd-card>b{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--deep-gold);}
+.rd-card .btn{width:100%;}
+.rd-specs{margin:0;padding-bottom:var(--s2);}
+.rd-note{margin:0;font-size:13px;color:var(--sage-text);line-height:1.55;}
+
+.amen.on-cream .amen-ico{background:var(--brook-wash);border-color:var(--mist-sage);color:var(--pine);}
+.amen.on-cream .amen-item p{font-weight:500;color:var(--pine);}
+.rd-more{margin:var(--s4) 0 0;color:var(--sage-text);font-size:15px;}
+.rd-more a{color:var(--deep-gold);font-weight:500;border-bottom:1px solid var(--braided-gold);}
+
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);}
+.g-item{padding:0;border:none;background:none;border-radius:var(--r-card);overflow:hidden;
+  cursor:pointer;aspect-ratio:4/3;position:relative;}
+.g-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease);}
+.g-item:hover img{transform:scale(1.05);}
+.gallery-grid.solo .g-item{aspect-ratio:21/9;grid-column:1/-1;}
+.gallery-grid:not(.solo) .g-item:first-child{grid-column:1/-1;aspect-ratio:21/9;}
+
+.lb{position:fixed;inset:0;z-index:120;background:rgba(31,45,41,.94);
+  display:flex;align-items:center;justify-content:center;padding:var(--s5);}
+.lb figure{margin:0;max-width:min(1100px,92vw);display:flex;flex-direction:column;gap:12px;}
+.lb figure img{max-height:78vh;width:auto;max-width:100%;margin:0 auto;border-radius:var(--r-card);}
+.lb figcaption{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);
+  color:rgba(239,230,221,.85);font-size:14px;}
+.lb-x,.lb-nav{background:none;border:1px solid rgba(239,230,221,.35);color:var(--alpine-cream);
+  border-radius:50%;width:46px;height:46px;font-size:22px;line-height:1;
+  display:grid;place-items:center;transition:background .25s var(--ease),color .25s var(--ease);}
+.lb-x:hover,.lb-nav:hover{background:var(--alpine-cream);color:var(--pine);}
+.lb-x{position:absolute;top:20px;right:24px;}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);}
+.lb-prev{left:24px;}
+.lb-next{right:24px;}
+
+.xr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4);}
+.xr-card{background:var(--paper-white);border-radius:var(--r-card);overflow:hidden;
+  box-shadow:0 12px 34px rgba(31,45,41,.09);transition:transform .3s var(--ease),box-shadow .3s var(--ease);}
+.xr-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(31,45,41,.16);}
+.xr-media{aspect-ratio:3/2;overflow:hidden;}
+.xr-media img{width:100%;height:100%;object-fit:cover;}
+.xr-body{padding:var(--s3) var(--s4) var(--s4);display:flex;flex-direction:column;gap:6px;}
+.xr-body b{font-size:15.5px;font-weight:600;color:var(--pine);line-height:1.4;}
+.xr-card:hover .xr-body b{text-decoration:underline;}
+.xr-body span{font-size:13px;color:var(--sage-text);}
+
+.rd-band{background:transparent;display:flex;flex-wrap:wrap;gap:var(--s5);
+  align-items:center;justify-content:space-between;}
+.rd-band h2{color:var(--alpine-cream);margin:0 0 10px;}
+.rd-band-sub{color:rgba(239,230,221,.85);max-width:520px;margin:0;}
+.rd-band-cta{display:flex;gap:var(--s2);flex-wrap:wrap;}
+
+/* ============================================================
+   BOOKING REDIRECTS — all CTAs deep-link to the STAAH SwiftBook
+   engine via bookingEngineUrl() (src/lib/site.ts). No in-page UI.
+   ============================================================ */
+
+/* Search widget — real inputs */
+.sf input[type="date"],.sf select{
+  font-family:inherit;font-size:15px;font-weight:500;color:var(--pine);
+  background:transparent;border:none;padding:0;width:auto;cursor:pointer;}
+.sw-guests .val{flex-wrap:nowrap;}
+@media (hover:hover){.sf input[type="date"]:hover,.sf select:hover{color:var(--deep-pine);}}
+input[type="date"]::-webkit-calendar-picker-indicator{opacity:.55;cursor:pointer;}
+
+/* ---------- Responsive additions ---------- */
+@media (max-width:1080px){
+  .rd-intro{grid-template-columns:1fr;gap:var(--s4);}
+  .rd-aside{position:static;}
+  .gallery-grid{grid-template-columns:repeat(2,1fr);}
+  .xr-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:700px){
+  .gallery-grid{grid-template-columns:1fr;}
+  .xr-grid{grid-template-columns:1fr;}
+  .lb{padding:var(--s3);}
+  .lb-prev{left:10px;}
+  .lb-next{right:10px;}
+}

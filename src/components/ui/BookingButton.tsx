@@ -1,21 +1,21 @@
 import { ReactNode } from "react";
-import { BOOKING_URL } from "@/lib/site";
+import { bookingEngineUrl } from "@/lib/site";
 
 export default function BookingButton({
   children,
   className = "btn btn-primary",
   dataEngine,
+  roomId,
 }: {
   children: ReactNode;
   className?: string;
   dataEngine?: string;
+  roomId?: string;
 }) {
   return (
     <a
       className={className}
-      href={BOOKING_URL}
-      target="_blank"
-      rel="noopener noreferrer"
+      href={bookingEngineUrl(roomId)}
       data-booking-engine
       {...(dataEngine ? { "data-engine": dataEngine } : {})}
     >

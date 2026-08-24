@@ -12,6 +12,20 @@ export const ADDRESS_LINES = ["12 Brookside Rd, Rolleston", "Canterbury 7614, Ne
 export const BOOKING_URL =
   "https://www.swiftbook.io/inst/#home?propertyId=223NTUD2eB2ox9GXf4NTU=&JDRN=Y";
 
+export const SWIFTBOOK_ROOM_IDS: Record<string, string> = {
+  "superior-outdoor": "225755",
+  "superior-interconnected": "225756",
+  "deluxe-two-doubles": "225757",
+  "deluxe-top-floor": "225758",
+  "accessible-superking": "225759",
+  "deluxe-one-double": "232836",
+};
+
+export function bookingEngineUrl(roomId?: string): string {
+  if (!roomId) return BOOKING_URL;
+  return `${BOOKING_URL.replace(/&JDRN=Y$/, "")}&RoomID=${encodeURIComponent(roomId)}&JDRN=Y`;
+}
+
 export interface NavItem {
   label: string;
   href: string;

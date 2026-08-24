@@ -18,7 +18,7 @@ export default function RoomShowcase() {
         <FeatureRoom />
 
         <div className="room-grid">
-          {ROOMS.map((room) => (
+          {ROOMS.filter((room) => !room.hideFromGrid).map((room) => (
             <RoomCard key={room.id} {...room} />
           ))}
         </div>

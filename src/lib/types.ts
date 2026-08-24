@@ -46,13 +46,23 @@ export interface RoomData {
   id: string;
   image: RoomImage;
   flag?: "accessible";
+  feature?: boolean;
+  hideFromGrid?: boolean;
+  summary?: string;
   name: string;
   liveName: ReactNode;
   description: ReactNode;
+  descriptionExtra?: ReactNode;
   specs: RoomSpec[];
   highlights: string[];
+  amenities: RoomSpec[];
   cta: string;
   detailsFirst?: boolean;
+}
+
+export interface GalleryImage {
+  src: string;
+  alt: string;
 }
 
 export interface FaqItem {

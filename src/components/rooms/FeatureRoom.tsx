@@ -1,5 +1,7 @@
+import Link from "next/link";
 import BookingButton from "@/components/ui/BookingButton";
 import SlotImage from "@/components/ui/SlotImage";
+import { SWIFTBOOK_ROOM_IDS } from "@/lib/site";
 
 export default function FeatureRoom() {
   return (
@@ -50,7 +52,17 @@ export default function FeatureRoom() {
           <li>Luxury toiletries &amp; high-pressure shower</li>
         </ul>
 
-        <BookingButton className="btn btn-primary">Book Superior Suite direct</BookingButton>
+        <div className="feature-cta">
+          <BookingButton
+            className="btn btn-primary"
+            roomId={SWIFTBOOK_ROOM_IDS["superior-outdoor"]}
+          >
+            Book Superior Suite direct
+          </BookingButton>
+          <Link className="btn btn-ghost" href="/motel-rooms/superior-outdoor">
+            View room details
+          </Link>
+        </div>
       </div>
     </article>
   );

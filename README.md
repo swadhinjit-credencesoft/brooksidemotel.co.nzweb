@@ -1,10 +1,12 @@
 # Brookside Motel — Website
 
-Production-level Next.js rebuild of the Brookside Motel marketing site (Rolleston, NZ). 8 static pages, component-per-section architecture, zero build errors.
+Production-level Next.js rebuild of the Brookside Motel marketing site (Rolleston, NZ). 8 static pages + 6 room detail pages + in-site booking flow, component-per-section architecture, zero build errors.
 
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript 5 · SCSS (CSS Modules-free, single `globals.scss`)
 - **Fonts:** Poppins only
-- **Bookings:** all direct-booking CTAs centralised through `src/lib/site.ts` (`BOOKING_URL`) and rendered via `src/components/ui/BookingButton.tsx`
+- **Bookings:** every booking CTA redirects to the STAAH SwiftBook engine via `bookingEngineUrl()` in `src/lib/site.ts`. Room-specific CTAs deep-link with the room's `RoomID`, e.g.
+  `https://www.swiftbook.io/inst/#home?propertyId=223NTUD2eB2ox9GXf4NTU=&RoomID=225758&JDRN=Y`
+  CTAs without a mapped room open the full availability list.
 
 ## Commands
 
@@ -15,7 +17,7 @@ npm run build     # production build -> static export in ./out (includes type ch
 npm run typecheck # standalone TypeScript check (tsc --noEmit)
 ```
 
-The site is configured with `output: "export"` in `next.config.ts`, so `next build` emits a fully static, self-contained `out/` folder — 8 HTML pages plus `404.html`, `robots.txt`, `sitemap.xml`, and all images/fonts. Deploy it by uploading `out/` to any static host (or preview locally with `npx serve out`). Because it is a static export, `next start` is not used; `next dev` still works for development.
+The site is configured with `output: "export"` in `next.config.ts`, so `next build` emits a fully static, self-contained `out/` folder — page HTML plus `404.html`, `robots.txt`, `sitemap.xml`, and all images/fonts. Deploy it by uploading `out/` to any static host (or preview locally with `npx serve out`). Because it is a static export, `next start` is not used; `next dev` still works for development.
 
 > If `next build` fails with a `validator.ts` "constraint 'never'" error, it is caused by stale dev-generated types — delete the `.next` folder and rebuild (`Remove-Item -Recurse .next; npm run build`).
 
@@ -25,9 +27,11 @@ There is no lint script. The import alias `@/*` maps to `src/`.
 
 ```
 src/
-├── app/                  # 8 page routes (thin orchestrators) + layout.tsx
+├── app/                          # thin orchestrators + layout.tsx
 │   ├── page.tsx                  /               home
-│   ├── motel-rooms/page.tsx      /motel-rooms
+│   ├── motel-rooms/page.tsx      /motel-rooms    room list
+│   ├── motel-rooms/[id]/page.tsx /motel-rooms/<room-id>   room detail (SSG via generateStaticParams)
+│   ├── book/page.tsx             /book           in-site booking flow (SwiftBook embed)
 │   ├── amenities/page.tsx        /amenities
 │   ├── brookside-residence/page.tsx
 │   ├── faq/page.tsx
@@ -35,21 +39,58 @@ src/
 │   ├── about-us/page.tsx
 │   └── contact/page.tsx
 ├── components/
-│   ├── layout/           # UtilityBar, SiteHeader, SiteFooter
-│   ├── ui/               # BookingButton, ContourArt, ArrowIcon, AccentBand, Ico,
-│   │                     #   PageHero, SlotImage, Placeholder, HeroMedia, RevealObserver
-│   ├── home/ rooms/ residence/ guide/ amenities/ faq/ about/ contact/
+│   ├── layout/             # UtilityBar, SiteHeader, SiteFooter
+│   ├── ui/                 # BookingButton, ContourArt, ArrowIcon, AccentBand, Ico,
+│   │                       #   PageHero, SlotImage, Placeholder, HeroMedia, RevealObserver
+│   ├── home/ rooms/ residence/ guide/ amenities/ faq/ about/ contact/ booking/
 │   └── ...
-├── content/              # data-driven content
-│   ├── rooms.tsx         # 5 motel room records (RoomData)
-│   └── faqs.tsx          # FAQ categories/items (JSX answers)
+├── content/
+│   ├── rooms.tsx           # 6 motel room records (RoomData) incl. per-room amenities + getRoom()
+│   └── faqs.tsx            # FAQ categories/items (JSX answers)
 ├── lib/
-│   ├── site.ts           # constants: BOOKING_URL, PHONE_*, EMAIL_STAY, address
-│   ├── img.ts            # server-side image-existence detection
-│   ├── types.ts          # shared types (IconName, RoomData, FaqCategory, ContourVariant…)
-│   └── index.ts          # barrel re-export
-└── app/globals.scss      # all styles (brand palette preserved)
+│   ├── site.ts             # constants: BOOKING_URL / BOOK_PAGE / SWIFTBOOK_ROOM_IDS, phone/email/address,
+│   │                       #   bookingEngineUrl(extraParams)
+│   ├── img.ts              # server-side image-existence detection + listRoomGallery(roomId)
+│   ├── types.ts            # shared types (RoomData, GalleryImage, FaqCategory…)
+│   └── index.ts            # barrel re-export
+└── app/globals.scss        # all styles (brand palette preserved)
 ```
+
+## Room detail pages & gallery images
+
+Every room record in `src/content/rooms.tsx` automatically gets a detail page at `/motel-rooms/<id>` (hero, overview + booking card, gallery, room amenities, standard amenities, other rooms, booking band).
+
+**To add gallery photos for a room**, drop them into:
+
+```
+public/images/rooms/<room-id>/          e.g. public/images/rooms/superior-outdoor/
+```
+
+Any `*.jpg / *.jpeg / *.png / *.webp / *.avif` files are picked up at build time (sorted by filename — name them `01.jpg`, `02.jpg`, … for ordering). Until a folder has images, the gallery falls back to the room's main image. Room ids: `superior-outdoor`, `superior-interconnected`, `deluxe-two-doubles`, `deluxe-top-floor`, `accessible-superking`, `deluxe-one-double`. Remember to rebuild after adding files (the image scan runs at build time).
+
+## Booking flow
+
+All Book buttons are plain anchors to the SwiftBook engine built by `bookingEngineUrl(roomId?)`:
+
+- Base URL: `https://www.swiftbook.io/inst/#home?propertyId=223NTUD2eB2ox9GXf4NTU=&JDRN=Y`
+- With room: appends `&RoomID=<swiftbook-id>` before `JDRN=Y`
+
+The home search widget submits straight through to the engine, where dates/guests are confirmed.
+
+**Room → RoomID mapping** lives in `SWIFTBOOK_ROOM_IDS` (`src/lib/site.ts`). To deep-link more rooms, get each room type's `RoomID` from the STAAH/SwiftBook dashboard and add a line:
+
+```ts
+export const SWIFTBOOK_ROOM_IDS: Record<string, string> = {
+  "superior-outdoor": "225755",
+  "superior-interconnected": "225756",
+  "deluxe-two-doubles": "225757",
+  "deluxe-top-floor": "225758",
+  "accessible-superking": "225759",
+  "deluxe-one-double": "232836",
+};
+```
+
+Unmapped rooms automatically fall back to the full availability list — nothing breaks while IDs are missing.
 
 ## Asset status
 
@@ -57,32 +98,9 @@ src/
 
 | File | Used by |
 | --- | --- |
-| `residence-hero.jpg` | /brookside-residence hero |
-| `residence-bedroom.jpg` | Residence bedroom gallery |
-| `residence-outdoor.jpg` | Residence outdoor spa/BBQ |
-| `residence-spa.jpg` | Cross-sell (motel-rooms) |
-| `residence-exterior.jpg` | Home journey section |
-| `room-residence.jpg` | Home featured rooms |
-| `post-dining.jpg` | Local guide — Dining post |
-| `post-airport.jpg` | Local guide — Airport post |
-| `Brookside-Motel-FINAL.mp4` | Home hero background video (`HeroMedia`) |
+| `Brookside-Motel-FINAL.mp4` | Home hero background video (`HeroMedia` — currently streams from `bookonelocal.in` CDN with poster fallback) |
 
-### Temporary fallbacks (currently in place)
-
-Until the real photos arrive, the 8 image slots above are filled with copies of existing photos so the site previews with real imagery. Replace them by overwriting the same filenames (then rebuild — the image check runs at build time):
-
-| Slot | Current fallback source |
-| --- | --- |
-| `residence-hero.jpg` | `hero-superior-room.jpg` |
-| `residence-bedroom.jpg` | `room-super-king.jpg` |
-| `residence-outdoor.jpg` | `superior-outdoor-area.jpg` |
-| `residence-spa.jpg` | `welcome-detail.jpg` |
-| `residence-exterior.jpg` | `about-exterior.jpg` |
-| `room-residence.jpg` | `deluxe-top-floor.jpg` |
-| `post-dining.jpg` | `welcome-detail.jpg` |
-| `post-airport.jpg` | `rolleston-community.jpg` |
-
-The `Brookside-Motel-FINAL.mp4` hero video has no fallback copy — `HeroMedia` already shows `hero-poster.jpg` until the video is supplied.
+The `Brookside-Motel-FINAL.mp4` hero video has no local copy — `HeroMedia` shows `hero-poster.jpg` until the video is supplied.
 
 ## Deploy
 

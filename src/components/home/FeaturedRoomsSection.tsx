@@ -2,6 +2,7 @@ import Link from "next/link";
 import ArrowIcon from "@/components/ui/ArrowIcon";
 import BookingButton from "@/components/ui/BookingButton";
 import SlotImage from "@/components/ui/SlotImage";
+import { SWIFTBOOK_ROOM_IDS } from "@/lib/site";
 
 const SpecGuests = (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
@@ -71,7 +72,7 @@ export default function FeaturedRoomsSection() {
             </div>
             <div className="room-body">
               <h4 className="h3">
-                <Link href="/motel-rooms#showcase">Superior Super King Suite</Link>
+                <Link href="/motel-rooms/superior-outdoor">Superior Super King Suite</Link>
               </h4>
               <ul className="room-specs">
                 <li>{SpecGuests}2 guests</li>
@@ -80,7 +81,12 @@ export default function FeaturedRoomsSection() {
                 <li>{SpecCheck}Luxury linen</li>
               </ul>
               <div className="room-cta">
-                <BookingButton className="btn btn-primary">Book direct &amp; save</BookingButton>
+                <BookingButton
+                  className="btn btn-primary"
+                  roomId={SWIFTBOOK_ROOM_IDS["superior-outdoor"]}
+                >
+                  Book direct &amp; save
+                </BookingButton>
               </div>
             </div>
           </article>
@@ -91,7 +97,7 @@ export default function FeaturedRoomsSection() {
             </div>
             <div className="room-body">
               <h4 className="h3">
-                <Link href="/motel-rooms#deluxe-two-doubles">Deluxe Family / Twin Room</Link>
+                <Link href="/motel-rooms/deluxe-two-doubles">Deluxe Family / Twin Room</Link>
               </h4>
               <ul className="room-specs">
                 <li>{SpecGuests}2–4 guests</li>
@@ -100,7 +106,12 @@ export default function FeaturedRoomsSection() {
                 <li>{SpecTv}Smart TV &amp; fibre Wi-Fi</li>
               </ul>
               <div className="room-cta">
-                <BookingButton className="btn btn-primary">Book direct &amp; save</BookingButton>
+                <BookingButton
+                  className="btn btn-primary"
+                  roomId={SWIFTBOOK_ROOM_IDS["deluxe-two-doubles"]}
+                >
+                  Book direct &amp; save
+                </BookingButton>
               </div>
             </div>
           </article>
