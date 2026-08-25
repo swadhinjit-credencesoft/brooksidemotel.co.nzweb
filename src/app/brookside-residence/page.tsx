@@ -6,6 +6,7 @@ import ResidenceBedrooms from "@/components/residence/ResidenceBedrooms";
 import ResidenceInsideTrio from "@/components/residence/ResidenceInsideTrio";
 import ResidenceOutdoor from "@/components/residence/ResidenceOutdoor";
 import ResidenceIdeal from "@/components/residence/ResidenceIdeal";
+import ResidenceGallery from "@/components/residence/ResidenceGallery";
 import ResidenceIncluded from "@/components/residence/ResidenceIncluded";
 import ResidenceBookingBand from "@/components/residence/ResidenceBookingBand";
 
@@ -39,6 +40,7 @@ export default function ResidencePage() {
       <ResidenceInsideTrio />
       <ResidenceOutdoor />
       <ResidenceIdeal />
+      <ResidenceGallery />
       <ResidenceIncluded />
       <ResidenceBookingBand />
     </>
