@@ -70,12 +70,13 @@ Any `*.jpg / *.jpeg / *.png / *.webp / *.avif` files are picked up at build time
 
 ## Booking flow
 
-All Book buttons are plain anchors to the SwiftBook engine built by `bookingEngineUrl(roomId?)`:
+All Book buttons are plain anchors to the SwiftBook engine built by `bookingEngineUrl(roomId?, stay?)`:
 
 - Base URL: `https://www.swiftbook.io/inst/#home?propertyId=223NTUD2eB2ox9GXf4NTU=&JDRN=Y`
 - With room: appends `&RoomID=<swiftbook-id>` before `JDRN=Y`
+- With stay: appends `&checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD` (lowercase names, matching the engine's own deep-link builder). Occupancy is not passable via URL — the engine opens at its default and the guest adjusts it there.
 
-The home search widget submits straight through to the engine, where dates/guests are confirmed.
+The home search bar redirects same-tab into the engine with the chosen dates prefilled (verified against the live engine: its availability call receives exactly those dates). Invalid/past dates fall back to defaults (+7/+9 days) so the redirect never dead-ends.
 
 **Room → RoomID mapping** lives in `SWIFTBOOK_ROOM_IDS` (`src/lib/site.ts`). To deep-link more rooms, get each room type's `RoomID` from the STAAH/SwiftBook dashboard and add a line:
 

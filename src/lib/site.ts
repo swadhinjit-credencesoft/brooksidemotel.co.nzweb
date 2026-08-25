@@ -21,9 +21,26 @@ export const SWIFTBOOK_ROOM_IDS: Record<string, string> = {
   "deluxe-one-double": "232836",
 };
 
-export function bookingEngineUrl(roomId?: string): string {
-  if (!roomId) return BOOKING_URL;
-  return `${BOOKING_URL.replace(/&JDRN=Y$/, "")}&RoomID=${encodeURIComponent(roomId)}&JDRN=Y`;
+export interface StayDates {
+  /** YYYY-MM-DD */
+  checkIn?: string;
+  /** YYYY-MM-DD */
+  checkOut?: string;
+}
+
+/**
+ * Deep link into the STAAH SwiftBook engine.
+ * - roomId → pre-selects that room type (SWIFTBOOK_ROOM_IDS).
+ * - stay   → prefills check-in/check-out (param names match the engine's
+ *            own search-button URL builder: lowercase checkIn/checkOut,
+ *            yyyy-MM-dd). Occupancy is finalised inside the engine.
+ */
+export function bookingEngineUrl(roomId?: string, stay?: StayDates): string {
+  const base = BOOKING_URL.replace(/&JDRN=Y$/, "");
+  let url = roomId ? `${base}&RoomID=${encodeURIComponent(roomId)}&JDRN=Y` : BOOKING_URL;
+  if (stay?.checkIn) url += `&checkIn=${encodeURIComponent(stay.checkIn)}`;
+  if (stay?.checkOut) url += `&checkOut=${encodeURIComponent(stay.checkOut)}`;
+  return url;
 }
 
 export interface NavItem {

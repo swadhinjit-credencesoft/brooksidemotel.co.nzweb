@@ -1,10 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BOOKING_URL } from "@/lib/site";
+import { BOOKING_URL, bookingEngineUrl } from "@/lib/site";
 
 function isoDate(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function defaultDates(): { checkIn: string; checkOut: string } {
+  const inD = new Date();
+  inD.setDate(inD.getDate() + 7);
+  const outD = new Date(inD);
+  outD.setDate(outD.getDate() + 2);
+  return { checkIn: isoDate(inD), checkOut: isoDate(outD) };
 }
 
 export default function SearchWidget() {
@@ -14,13 +25,9 @@ export default function SearchWidget() {
   const [children, setChildren] = useState("0");
 
   useEffect(() => {
-    const today = new Date();
-    const inD = new Date(today);
-    inD.setDate(inD.getDate() + 7);
-    const outD = new Date(inD);
-    outD.setDate(outD.getDate() + 2);
-    setCheckin(isoDate(inD));
-    setCheckout(isoDate(outD));
+    const { checkIn, checkOut } = defaultDates();
+    setCheckin(checkIn);
+    setCheckout(checkOut);
   }, []);
 
   const onCheckin = (v: string) => {
@@ -34,13 +41,29 @@ export default function SearchWidget() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = BOOKING_URL;
+
+    let ci = checkin;
+    let co = checkout;
+    const today = isoDate(new Date());
+    if (!ci || !co || ci < today || co <= ci) {
+      const fallback = defaultDates();
+      ci = fallback.checkIn;
+      co = fallback.checkOut;
+    }
+
+    // Same-tab redirect into the STAAH engine with the stay prefilled.
+    window.location.href = bookingEngineUrl(undefined, { checkIn: ci, checkOut: co });
   };
 
   return (
     <div className="search" id="search">
       <div className="wrap">
-        <form className="search-card" action={BOOKING_URL} method="get" onSubmit={submit}>
+        <form
+          className="search-card"
+          action={BOOKING_URL}
+          method="get"
+          onSubmit={submit}
+        >
           <div className="sf">
             <label htmlFor="sw-checkin">Check-in date</label>
             <div className="val">

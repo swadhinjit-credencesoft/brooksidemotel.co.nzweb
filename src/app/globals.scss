@@ -860,6 +860,45 @@ table.facts td:first-child{font-weight:600;color:var(--pine);}
 .sw-guests .val{flex-wrap:nowrap;}
 @media (hover:hover){.sf input[type="date"]:hover,.sf select:hover{color:var(--deep-pine);}}
 input[type="date"]::-webkit-calendar-picker-indicator{opacity:.55;cursor:pointer;}
+.search-go .btn:disabled{opacity:.75;cursor:progress;}
+
+/* Live availability results (booking bar → STAAH CSBE) */
+.sw-note{margin:0;padding:16px var(--s3);font-family:var(--sans);
+  font-size:14.5px;line-height:1.55;color:var(--sage-text);}
+.sw-results{background:var(--paper-white);border-radius:0 0 var(--r-card) var(--r-card);
+  box-shadow:0 22px 60px rgba(31,45,41,.17);border-top:none;overflow:hidden;
+  border-top:1px solid var(--mist-sage);}
+.sw-results--fallback .sw-fallback-actions{padding:0 var(--s3) 20px;}
+.swr-head{display:flex;flex-wrap:wrap;gap:4px 18px;align-items:baseline;
+  padding:16px var(--s3);border-bottom:1px solid var(--brook-wash);
+  font-family:var(--sans);font-size:13px;letter-spacing:.02em;color:var(--sage-text);}
+.swr-head b{color:var(--deep-pine);font-size:15px;letter-spacing:.01em;}
+.swr-list{list-style:none;margin:0;padding:0;}
+.swr-row{display:flex;align-items:center;gap:var(--s3);
+  padding:14px var(--s3);border-bottom:1px solid var(--brook-wash);}
+.swr-list:last-of-type .swr-row:last-child{border-bottom:none;}
+.swr-name{font-size:15.5px;font-weight:600;color:var(--deep-pine);}
+.swr-meta{font-size:13px;color:var(--sage-text);margin-top:2px;}
+.swr-price{text-align:right;white-space:nowrap;margin-left:auto;}
+.swr-total{display:block;font-size:19px;font-weight:700;color:var(--deep-gold);}
+.swr-per{display:block;font-size:12px;color:var(--sage-text);margin-top:1px;}
+.swr-book{flex-shrink:0;}
+.swr-row--soldout{opacity:.62;}
+.swr-soldout{margin-left:auto;font-size:12px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--sage-text);}
+.sw-footnote{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:space-between;
+  padding:12px var(--s3) 16px;font-size:12.5px;color:var(--sage-text);}
+.sw-footnote a{color:var(--deep-gold);text-decoration:underline;text-underline-offset:2px;}
+.sw-spin{display:inline-block;width:14px;height:14px;margin-right:9px;vertical-align:-2px;
+  border:2px solid rgba(250,247,243,.4);border-top-color:#fff;border-radius:50%;
+  animation:swspin .7s linear infinite;}
+@keyframes swspin{to{transform:rotate(360deg)}}
+@media (max-width:720px){
+  .swr-row{flex-wrap:wrap;row-gap:10px;}
+  .swr-price{margin-left:0;text-align:left;width:100%;
+    display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .swr-per{margin-top:0;}
+}
 
 /* ---------- Responsive additions ---------- */
 @media (max-width:1080px){
