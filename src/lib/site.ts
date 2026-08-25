@@ -21,6 +21,11 @@ export const SWIFTBOOK_ROOM_IDS: Record<string, string> = {
   "deluxe-one-double": "232836",
 };
 
+/** Reverse map: STAAH numeric RoomId → our slug. */
+export const STAAH_SLUGS: Record<string, string> = Object.fromEntries(
+  Object.entries(SWIFTBOOK_ROOM_IDS).map(([slug, id]) => [id, slug]),
+);
+
 export interface StayDates {
   /** YYYY-MM-DD */
   checkIn?: string;
@@ -41,6 +46,21 @@ export function bookingEngineUrl(roomId?: string, stay?: StayDates): string {
   if (stay?.checkIn) url += `&checkIn=${encodeURIComponent(stay.checkIn)}`;
   if (stay?.checkOut) url += `&checkOut=${encodeURIComponent(stay.checkOut)}`;
   return url;
+}
+
+/**
+ * Internal booking page URL with params.
+ * The /book page runs a custom multi-step booking engine.
+ */
+export function bookPageUrl(opts: { room?: string; checkIn?: string; checkOut?: string; adults?: number; children?: number } = {}): string {
+  const p = new URLSearchParams();
+  if (opts.room) p.set("room", opts.room);
+  if (opts.checkIn) p.set("checkIn", opts.checkIn);
+  if (opts.checkOut) p.set("checkOut", opts.checkOut);
+  if (opts.adults) p.set("adults", String(opts.adults));
+  if (opts.children) p.set("children", String(opts.children));
+  const qs = p.toString();
+  return qs ? `/book?${qs}` : "/book";
 }
 
 export interface NavItem {

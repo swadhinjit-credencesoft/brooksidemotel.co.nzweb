@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: item.href === "/" ? ("weekly" as const) : ("monthly" as const),
       priority: item.href === "/" ? 1 : 0.8,
     })),
+    { url: `${SITE_URL}/book`, changeFrequency: "monthly" as const, priority: 0.6 },
     ...ROOMS.map((room) => ({
       url: `${SITE_URL}/motel-rooms/${room.id}`,
       changeFrequency: "monthly" as const,

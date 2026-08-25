@@ -83,6 +83,9 @@ export default function SiteFooter() {
                 <li>
                   <Link href="/local-guide">Local Guide</Link>
                 </li>
+                <li>
+                  <Link href="/manage-booking">Manage Booking</Link>
+                </li>
               </ul>
             </div>
             <div>

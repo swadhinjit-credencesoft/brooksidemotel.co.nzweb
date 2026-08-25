@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { bookingEngineUrl } from "@/lib/site";
+import { bookPageUrl } from "@/lib/site";
 
 export default function BookingButton({
   children,
@@ -15,7 +15,7 @@ export default function BookingButton({
   return (
     <a
       className={className}
-      href={bookingEngineUrl(roomId)}
+      href={bookPageUrl({ room: roomId })}
       data-booking-engine
       {...(dataEngine ? { "data-engine": dataEngine } : {})}
     >

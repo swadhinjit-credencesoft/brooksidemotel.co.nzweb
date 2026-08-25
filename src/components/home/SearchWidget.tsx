@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BOOKING_URL, bookingEngineUrl } from "@/lib/site";
+import { BOOKING_URL, bookPageUrl } from "@/lib/site";
 
 function isoDate(d: Date): string {
   const y = d.getFullYear();
@@ -51,8 +51,7 @@ export default function SearchWidget() {
       co = fallback.checkOut;
     }
 
-    // Same-tab redirect into the STAAH engine with the stay prefilled.
-    window.location.href = bookingEngineUrl(undefined, { checkIn: ci, checkOut: co });
+    window.location.href = bookPageUrl({ checkIn: ci, checkOut: co, adults: Number(adults), children: Number(children) });
   };
 
   return (
