@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.scss";
-import UtilityBar from "@/components/layout/UtilityBar";
-import SiteHeader from "@/components/layout/SiteHeader";
-import SiteFooter from "@/components/layout/SiteFooter";
-import RevealObserver from "@/components/ui/RevealObserver";
+import LayoutShell from "@/components/layout/LayoutShell";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -57,11 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body suppressHydrationWarning>
-        <UtilityBar />
-        <SiteHeader />
-        {children}
-        <SiteFooter />
-        <RevealObserver />
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   );
