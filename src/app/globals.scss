@@ -179,8 +179,18 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
   text-transform:uppercase;color:var(--sage-text);margin-bottom:7px;}
 .sf .val{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500;color:var(--pine);}
 .sf .val small{font-size:13px;font-weight:400;color:var(--sage-text);}
+.sf input[type="date"],.sf select{
+  font-family:var(--sans);font-size:15px;font-weight:500;color:var(--pine);
+  background:transparent;border:none;outline:none;padding:0;width:auto;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+}
+.sf select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%234E645E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 0 center;padding-right:16px;
+}
 .search-go{display:flex;}
-.search-go .btn{border-radius:0;padding-inline:36px;height:100%;}
+.search-go .btn{border-radius:0;padding-inline:36px;height:100%;font-size:13.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+
 
 /* ============================================================
    MODULE 3 - DUAL-JOURNEY BANNER
@@ -368,7 +378,7 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
 }
 @media (max-width:860px){
   :root{--s7:48px;--s8:60px;}
-  .search{display:none;}
+  .search{margin-top:-32px;}
   .nav{display:none;}
   .burger{display:flex;}
   .section{padding:var(--s7) 0;}
@@ -1890,3 +1900,5 @@ button.be-step{cursor:pointer;}
   .be-confirm-card{padding:28px 18px 24px;}
   .be-confirm-card h2{font-size:22px;}
 }
+
+

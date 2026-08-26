@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import BookingButton from "@/components/ui/BookingButton";
+import ResidenceSearchBar from "@/components/residence/ResidenceSearchBar";
 import ResidenceIntro from "@/components/residence/ResidenceIntro";
 import ResidenceBedrooms from "@/components/residence/ResidenceBedrooms";
 import ResidenceInsideTrio from "@/components/residence/ResidenceInsideTrio";
@@ -11,7 +12,7 @@ import ResidenceIncluded from "@/components/residence/ResidenceIncluded";
 import ResidenceBookingBand from "@/components/residence/ResidenceBookingBand";
 
 export const metadata: Metadata = {
-  title: "Brookside Residence \u2014 4-Bedroom Luxury Home, Rolleston",
+  title: "Brookside Residence — 4-Bedroom Luxury Home, Rolleston",
   description:
     "Our flagship 4-bedroom home in Rolleston with private outdoor spa, BBQ area, 3 bathrooms and an 85-inch Smart TV lounge. Sleeps up to 8 adults.",
 };
@@ -35,6 +36,7 @@ export default function ResidencePage() {
         }
       />
 
+      <ResidenceSearchBar />
       <ResidenceIntro />
       <ResidenceBedrooms />
       <ResidenceInsideTrio />
