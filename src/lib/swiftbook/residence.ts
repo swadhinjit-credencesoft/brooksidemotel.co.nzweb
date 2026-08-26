@@ -516,3 +516,49 @@ export function addDays(iso: string, days: number): string {
   d.setDate(d.getDate() + days);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
+
+/* ─────────────────────────────────────────────────────────────────────
+   7. PropertyJson — live room config (name, description, images, amenities)
+      GET https://www.swiftbook.io/PropertyJson/EN/58428.json
+      Returns RoomId, RoomDisplayName, MaxGuest, RoomSize, GalleryImages,
+              RoomDescription, RoomAmenities, Fees
+   ───────────────────────────────────────────────────────────────────── */
+
+/** One room entry from the Residence PropertyJson endpoint */
+export interface ResidencePropertyRoom {
+  RoomId: string;
+  RoomName: string;
+  RoomDisplayName: string;
+  RoomDescription: string;
+  MaxGuest: number;
+  MaxAdult: number;
+  MaxChildren: number;
+  RoomSize: string;
+  GalleryImages: string[];
+  Images: string[];
+  RoomAmenities: Record<string, string[]>;
+  Fees: Array<{ Name: string; Value: number; ValueType: string; StayType: string }>;
+}
+
+interface ResidencePropertyJsonResponse {
+  PropertyList?: Array<{
+    RoomData?: ResidencePropertyRoom[];
+  }>;
+}
+
+/**
+ * Fetch live room metadata (names, descriptions, images, amenities) for the Residence property.
+ *
+ * GET https://www.swiftbook.io/PropertyJson/EN/58428.json
+ * No auth required — public endpoint.
+ */
+export async function fetchResidencePropertyJson(): Promise<ResidencePropertyRoom[]> {
+  const PROPERTY_JSON_BASE = "https://www.swiftbook.io/PropertyJson";
+  const url = `${PROPERTY_JSON_BASE}/EN/${RESIDENCE_PROPERTY_ID_DEC}.json?tmp=${Date.now()}`;
+
+  const res = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+  if (!res.ok) throw new Error(`ResidencePropertyJson failed: HTTP ${res.status}`);
+
+  const json = (await res.json()) as ResidencePropertyJsonResponse;
+  return json.PropertyList?.[0]?.RoomData ?? [];
+}

@@ -9,10 +9,12 @@ import {
   verifyResidenceBooking,
   processResidencePayment,
   trackResidenceEvent,
+  fetchResidencePropertyJson,
   formatCurrency,
   formatDateLong,
   todayISO,
   addDays,
+  type ResidencePropertyRoom,
 } from "@/lib/swiftbook/residence";
 import type { RoomQuote, RateDetail } from "@/lib/swiftbook/types";
 
@@ -28,54 +30,29 @@ interface ConfirmationData {
   paymentUrl?: string;
 }
 
-const RESIDENCE_ROOM_NAME = "Brookside Residence – 4-Bedroom Luxury Home";
-const RESIDENCE_SUBTITLE = "4-Bedroom Luxury Home · Private Outdoor Spa & BBQ · Sleeps up to 8";
-const RESIDENCE_HERO = "/images/residenceimage/residencefullview.png";
-
-const RESIDENCE_GALLERY = [
-  "/images/residenceimage/residencefullview.png",
-  "/images/residenceimage/residence1.png",
-  "/images/residenceimage/residence2.png",
-  "/images/residenceimage/residence3.png",
-  "/images/residenceimage/residence4.png",
-  "/images/residenceimage/residence5.png",
-  "/images/residenceimage/residence6.png",
-  "/images/residenceimage/residence7.png",
-];
-
-const RESIDENCE_SPECS = [
-  "Up to 8 guests",
-  "4 Bedrooms (2 Super King, 2 Queen)",
-  "3 Bathrooms (2 Ensuite)",
-  "Private Outdoor Spa & BBQ",
-];
-
-const RESIDENCE_HIGHLIGHTS = [
-  "Private outdoor spa pool (exclusive use — no sharing)",
-  "85-inch Smart TV lounge & premium audio system",
-  "Full designer kitchen & alfresco BBQ dining area",
-  "2 Ensuite bathrooms + 1 main family bathroom",
-  "Guest-controlled heat pump & air conditioning",
-  "Ultra-Fast Fibre Wi-Fi & dedicated off-street parking",
-];
-
-const RESIDENCE_AMENITIES = [
-  { text: "Private outdoor spa pool (exclusive use)" },
-  { text: "4 spacious luxury bedrooms" },
-  { text: "3 bathrooms (2 ensuite, 1 family)" },
-  { text: "85″ Smart TV lounge with streaming apps" },
-  { text: "Full kitchen with oven, dishwasher & cookware" },
-  { text: "BBQ & outdoor alfresco dining setup" },
-  { text: "Ultra-Fast Fibre Wi-Fi throughout" },
-  { text: "Free secure off-street parking" },
-  { text: "Luxury toiletries, towels & spa robes" },
-];
+/**
+ * Derive a structured display object from a live ResidencePropertyRoom API record.
+ * All values come from the STAAH PropertyJson endpoint — zero hardcoding.
+ */
+function buildRoomDisplay(room: ResidencePropertyRoom) {
+  const name = room.RoomDisplayName || room.RoomName || "Residence";
+  const maxG = room.MaxGuest ?? 4;
+  const rawSize = room.RoomSize ?? "";
+  const size = rawSize.replace(":", " ").trim(); // "225:sqm" → "225 sqm"
+  const gallery = room.GalleryImages?.length ? room.GalleryImages : (room.Images?.length ? room.Images : []);
+  const hero = gallery[0] ?? "";
+  const amenities = room.RoomAmenities ?? {};
+  const allAmenities = Object.values(amenities).flat();
+  const description = (room.RoomDescription ?? "").replace(/<[^>]*>/g, "").trim();
+  return { name, maxG, size, gallery, hero, amenities, allAmenities, description };
+}
 
 const ARRIVAL_TIMES = [
   "12:00 pm", "01:00 pm", "02:00 pm", "03:00 pm", "04:00 pm",
   "05:00 pm", "06:00 pm", "07:00 pm", "08:00 pm", "09:00 pm",
   "10:00 pm (Late arrival)",
 ];
+
 
 const COUNTRY_DIAL_CODES = [
   { code: "+64", country: "NZ", flag: "🇳🇿", name: "NZ (+64)" },
@@ -115,16 +92,6 @@ function formatDateWithDay(iso: string): string {
 function formatDateTracker(d: string): string {
   const [y, m, day] = d.split("-");
   return `${day}-${m}-${y}`;
-}
-
-function roomName(rid: string): string {
-  if (rid === "253371") return "Brookside Residence – 4-Bedroom Luxury Home (Exclusive Spa)";
-  return "Brookside Residence – 4-Bedroom Luxury Home";
-}
-
-function roomHeroImage(rid: string): string {
-  if (rid === "253371") return "/images/residenceimage/residence4.png";
-  return "/images/residenceimage/residencefullview.png";
 }
 
 /* ------------------------------------------------------------------ */
@@ -190,6 +157,9 @@ export default function ResidenceBookingEngine() {
 
   // Gallery state for room detail view
   const [galleryIdx, setGalleryIdx] = useState(0);
+
+  // Live room metadata from PropertyJson API (zero hardcoding)
+  const [roomMetas, setRoomMetas] = useState<Record<string, ResidencePropertyRoom>>({});
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const searched = useRef(false);
@@ -258,7 +228,15 @@ export default function ResidenceBookingEngine() {
     setAdults(ad);
     setChildren(ch);
     searched.current = true;
+    // Fetch availability + live room metadata in parallel
     doSearch(ci, co, ad, ch);
+    fetchResidencePropertyJson()
+      .then((rooms) => {
+        const map: Record<string, ResidencePropertyRoom> = {};
+        for (const r of rooms) map[r.RoomId] = r;
+        setRoomMetas(map);
+      })
+      .catch((e) => console.warn("[residence property-json]", e));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -407,6 +385,26 @@ export default function ResidenceBookingEngine() {
   const setGuest = (field: string, value: string | boolean) => setGuestForm((prev) => ({ ...prev, [field]: value }));
   const setCc = (field: string, value: string) => setCcForm((prev) => ({ ...prev, [field]: value }));
 
+  /**
+   * Get live room display data from the API-fetched roomMetas state.
+   * Falls back to safe defaults while the API call is in-flight.
+   */
+  const getRoomDisplay = (roomId: string) => {
+    const room = roomMetas[roomId];
+    if (room) return buildRoomDisplay(room);
+    // Graceful loading fallback — will be filled once PropertyJson loads
+    return {
+      name: roomId === "253372" ? "2 BEDROOM RESIDENCE" : "BROOKSIDE RESIDENCE",
+      maxG: roomId === "253372" ? 4 : 8,
+      size: "225 sqm",
+      gallery: [] as string[],
+      hero: "",
+      amenities: {} as Record<string, string[]>,
+      allAmenities: [] as string[],
+      description: "",
+    };
+  };
+
   /* ── Summary sidebar (exact same as /book) ── */
   const SummarySidebar = () => (
     <aside className="be-summary">
@@ -426,22 +424,27 @@ export default function ResidenceBookingEngine() {
         )}
       </div>
 
-      {selected && (
-        <div className="be-summary-room-card">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={roomHeroImage(selected.roomId)}
-            alt={roomName(selected.roomId)}
-            className="be-summary-room-thumb"
-            width={80}
-            height={60}
-          />
-          <div className="be-summary-room-info">
-            <p className="be-summary-room-title">{roomName(selected.roomId)}</p>
-            <span className="be-summary-room-badge">4-Bedroom Luxury Home · Instant confirmation</span>
+      {selected && (() => {
+        const meta = getRoomDisplay(selected.roomId);
+        return (
+          <div className="be-summary-room-card">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            {meta.hero && (
+              <img
+                src={meta.hero}
+                alt={meta.name}
+                className="be-summary-room-thumb"
+                width={80}
+                height={60}
+              />
+            )}
+            <div className="be-summary-room-info">
+              <p className="be-summary-room-title">{meta.name}</p>
+              <span className="be-summary-room-badge">{meta.size} · Up to {meta.maxG} guests · Instant confirmation</span>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       <dl className="be-summary-dl">
         <dt>Dates</dt>
@@ -505,7 +508,7 @@ export default function ResidenceBookingEngine() {
         <a href="/" className="be-brand-link">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="be-brand-logo" src="/logos/logo-pine.png" alt="Brookside Motel & Residence" width={240} height={56} />
-          <span className="be-brand-sub">Brookside Residence · Flagship 4-Bedroom Luxury Home · Rolleston</span>
+          <span className="be-brand-sub">Brookside Residence · Luxury Accommodation · Rolleston</span>
         </a>
         <div className="be-brand-right">
           <div className="be-brand-badge">
@@ -533,7 +536,7 @@ export default function ResidenceBookingEngine() {
               <div className="be-bar-field-head">
                 <label htmlFor="rbb-co">Check-out</label>
               </div>
-              <input id="rbb-co" type="date" value={checkOut} min={checkIn || todayISO()} onChange={(e) => setCheckOut(e.target.value)} required />
+              <input id="rbb-co" type="date" value={checkOut} min={checkIn ? addDays(checkIn, 1) : todayISO()} onChange={(e) => setCheckOut(e.target.value)} required />
             </div>
             <div className="be-bar-field">
               <div className="be-bar-field-head">
@@ -570,7 +573,7 @@ export default function ResidenceBookingEngine() {
         </div>
         <div className="be-perk-item">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>Free 48h Cancellation</span>
+          <span>Free Cancellation Policy</span>
         </div>
         <div className="be-perk-item">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
@@ -626,33 +629,37 @@ export default function ResidenceBookingEngine() {
               </div>
               <div className="be-room-grid">
                 {available.map((q) => {
+                  const meta = getRoomDisplay(q.roomId);
                   const showUrgency = q.minInventory > 0 && q.minInventory <= 2;
                   return (
                     <div key={q.roomId} className="be-card be-card--hl">
                       <div className="be-card-img-wrap">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img className="be-card-img" src={roomHeroImage(q.roomId)} alt={roomName(q.roomId)} width={280} height={240} loading="lazy" />
+                        {meta.hero && <img className="be-card-img" src={meta.hero} alt={meta.name} width={280} height={240} loading="lazy" />}
                         <div className="be-card-img-overlay" />
-                        <span className="be-card-badge be-card-badge--hl">Flagship Home</span>
+                        <span className="be-card-badge be-card-badge--hl">{meta.size}</span>
                         {showUrgency && <span className="be-card-badge be-card-badge--urgency">Only {q.minInventory} available</span>}
                         <button
                           type="button"
                           className="be-card-view-details-btn"
                           onClick={() => onSelectRoom(q)}
                         >
-                          View residence photos
+                          View photos &amp; info
                         </button>
                       </div>
                       <div className="be-card-body">
                         <div className="be-card-header">
-                          <h3 className="be-card-name">{roomName(q.roomId)}</h3>
-                          <span className="be-card-plan">Whole Luxury Home · Instant confirmation</span>
+                          <h3 className="be-card-name">{meta.name}</h3>
+                          <span className="be-card-plan">{meta.size} · Up to {meta.maxG} guests · Instant confirmation</span>
                         </div>
                         <div className="be-card-specs">
-                          {RESIDENCE_SPECS.map((s, i) => <span key={i} className="be-spec">{s}</span>)}
+                          <span className="be-spec">Up to {meta.maxG} guests</span>
+                          {meta.size && <span className="be-spec">{meta.size}</span>}
+                          {meta.allAmenities.includes("Spa Pool / Hot Tub") && <span className="be-spec">Private Spa Pool</span>}
+                          {meta.allAmenities.includes("Full Kitchen") && <span className="be-spec">Full Kitchen</span>}
                         </div>
                         <ul className="be-card-features">
-                          {RESIDENCE_HIGHLIGHTS.slice(0, 4).map((h, i) => <li key={i}>{h}</li>)}
+                          {meta.allAmenities.slice(0, 4).map((a, i) => <li key={i}>{a}</li>)}
                         </ul>
                       </div>
                       <div className="be-card-price">
@@ -711,112 +718,119 @@ export default function ResidenceBookingEngine() {
       )}
 
       {/* ═══════════════ VIEW: ROOM DETAIL ═══════════════ */}
-      {view === "detail" && selected && (
-        <div className="be-detail">
-          <button type="button" className="be-back" onClick={() => { setView("results"); setSelected(null); setRateDetail(null); }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-            Back to overview
-          </button>
-
-          {/* Image gallery */}
-          <div className="be-detail-gallery">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="be-detail-img"
-              src={RESIDENCE_GALLERY[galleryIdx] || RESIDENCE_HERO}
-              alt={RESIDENCE_ROOM_NAME}
-              width={800}
-              height={520}
-            />
-            <button type="button" className="be-gallery-nav be-gallery-prev" onClick={() => setGalleryIdx((i) => (i === 0 ? RESIDENCE_GALLERY.length - 1 : i - 1))} aria-label="Previous image">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+      {view === "detail" && selected && (() => {
+        const meta = getRoomDisplay(selected.roomId);
+        const gallery = meta.gallery;
+        return (
+          <div className="be-detail">
+            <button type="button" className="be-back" onClick={() => { setView("results"); setSelected(null); setRateDetail(null); }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+              Back to overview
             </button>
-            <button type="button" className="be-gallery-nav be-gallery-next" onClick={() => setGalleryIdx((i) => (i === RESIDENCE_GALLERY.length - 1 ? 0 : i + 1))} aria-label="Next image">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-            </button>
-            <div className="be-gallery-dots">
-              {RESIDENCE_GALLERY.map((_, i) => (
-                <span key={i} className={`be-gallery-dot${i === galleryIdx ? " be-gallery-dot--active" : ""}`} onClick={() => setGalleryIdx(i)} />
-              ))}
-            </div>
-          </div>
 
-          <div className="be-detail-body">
-            {/* Left: residence info */}
-            <div className="be-detail-info">
-              <h2 className="be-detail-name">{roomName(selected.roomId)}</h2>
-              <div className="be-detail-specs">
-                {RESIDENCE_SPECS.map((s, i) => <span key={i} className="be-spec">{s}</span>)}
-              </div>
-              <p className="be-detail-live-name">{RESIDENCE_SUBTITLE}</p>
-
-              <div className="be-detail-desc">
-                A luxury stay beyond expectations — our flagship 4-bedroom home with private outdoor spa pool, alfresco BBQ area, 3 bathrooms (including 2 ensuites), and resort-style living in Rolleston.
-              </div>
-              <div className="be-detail-desc">
-                Ideal for families, wedding parties, executive retreats, and group stays. Features 2 Super King bedrooms, 2 Queen bedrooms, full chef&apos;s kitchen, laundry facilities, and an 85-inch Smart TV lounge.
-              </div>
-
-              <div className="be-detail-section">
-                <h3>Highlights</h3>
-                <ul className="be-detail-hl">
-                  {RESIDENCE_HIGHLIGHTS.map((h, i) => <li key={i}>{h}</li>)}
-                </ul>
-              </div>
-
-              <div className="be-detail-section">
-                <h3>Residence amenities</h3>
-                <div className="be-detail-amenities">
-                  {RESIDENCE_AMENITIES.map((a, i) => (
-                    <div key={i} className="be-detail-amenity">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
-                      <span>{a.text}</span>
-                    </div>
+            {/* Image gallery */}
+            {gallery.length > 0 && (
+              <div className="be-detail-gallery">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="be-detail-img"
+                  src={gallery[galleryIdx] || gallery[0]}
+                  alt={meta.name}
+                  width={800}
+                  height={520}
+                />
+                <button type="button" className="be-gallery-nav be-gallery-prev" onClick={() => setGalleryIdx((i) => (i === 0 ? gallery.length - 1 : i - 1))} aria-label="Previous image">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+                </button>
+                <button type="button" className="be-gallery-nav be-gallery-next" onClick={() => setGalleryIdx((i) => (i === gallery.length - 1 ? 0 : i + 1))} aria-label="Next image">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+                </button>
+                <div className="be-gallery-dots">
+                  {gallery.map((_, i) => (
+                    <span key={i} className={`be-gallery-dot${i === galleryIdx ? " be-gallery-dot--active" : ""}`} onClick={() => setGalleryIdx(i)} />
                   ))}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Right: sticky rate + CTA */}
-            <aside className="be-detail-aside">
-              <div className="be-detail-rate-box">
-                <div className="be-detail-rate-row">
-                  <span>{selected.nights} night{selected.nights !== 1 ? "s" : ""}</span>
-                  <strong>{displayTotal > 0 ? formatCurrency(displayTotal, currency) : (rateLoading ? "Loading…" : "—")}</strong>
+            <div className="be-detail-body">
+              {/* Left: residence info */}
+              <div className="be-detail-info">
+                <h2 className="be-detail-name">{meta.name}</h2>
+                <div className="be-detail-specs">
+                  <span className="be-spec">Up to {meta.maxG} guests</span>
+                  {meta.size && <span className="be-spec">{meta.size}</span>}
+                  {meta.allAmenities.includes("Spa Pool / Hot Tub") && <span className="be-spec">Private Spa Pool</span>}
+                  {meta.allAmenities.includes("Full Kitchen") && <span className="be-spec">Full Kitchen</span>}
                 </div>
-                {selected.minNightly !== null && selected.nights > 1 && (
-                  <div className="be-detail-rate-row be-detail-rate-row--sub">
-                    <span>Per night</span>
-                    <span>{formatCurrency(selected.minNightly, selected.currency)}</span>
-                  </div>
+                <p className="be-detail-live-name">{meta.size} · Up to {meta.maxG} guests</p>
+
+                {meta.description && (
+                  <div className="be-detail-desc">{meta.description}</div>
                 )}
-                {!rateLoading && perDay && Object.keys(perDay).length > 0 && (
-                  <div className="be-detail-breakdown">
-                    {Object.entries(perDay).map(([date, d]) => (
-                      <div key={date} className="be-detail-rate-row be-detail-rate-row--sub">
-                        <span>{formatDateLong(date)}</span>
-                        <span>{formatCurrency(d.afterTax, currency)}</span>
-                      </div>
-                    ))}
+
+                {/* Amenities grouped by category from the API */}
+                {Object.keys(meta.amenities).length > 0 && (
+                  <div className="be-detail-section">
+                    <h3>Residence amenities</h3>
+                    <div className="be-detail-amenities">
+                      {Object.entries(meta.amenities).map(([category, items]) => (
+                        <div key={category}>
+                          <div className="be-detail-amenity-category">{category}</div>
+                          {(items as string[]).map((item, i) => (
+                            <div key={i} className="be-detail-amenity">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                              <span>{item}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                )}
-                {displayDeposit > 0 && (
-                  <div className="be-detail-rate-row be-detail-rate-row--sub be-detail-deposit">
-                    <span>Deposit due now</span>
-                    <span>{formatCurrency(displayDeposit, currency)}</span>
-                  </div>
-                )}
-                {displayCancelDesc && (
-                  <p className="be-detail-cancel" style={{ whiteSpace: "pre-line" }}>{displayCancelDesc}</p>
                 )}
               </div>
-              <button type="button" className="btn btn-gold be-full-btn" onClick={() => setView("guests")}>
-                Continue to guest details
-              </button>
-            </aside>
+
+              {/* Right: sticky rate + CTA */}
+              <aside className="be-detail-aside">
+                <div className="be-detail-rate-box">
+                  <div className="be-detail-rate-row">
+                    <span>{selected.nights} night{selected.nights !== 1 ? "s" : ""}</span>
+                    <strong>{displayTotal > 0 ? formatCurrency(displayTotal, currency) : (rateLoading ? "Loading…" : "—")}</strong>
+                  </div>
+                  {selected.minNightly !== null && selected.nights > 1 && (
+                    <div className="be-detail-rate-row be-detail-rate-row--sub">
+                      <span>Per night</span>
+                      <span>{formatCurrency(selected.minNightly, selected.currency)}</span>
+                    </div>
+                  )}
+                  {!rateLoading && perDay && Object.keys(perDay).length > 0 && (
+                    <div className="be-detail-breakdown">
+                      {Object.entries(perDay).map(([date, d]) => (
+                        <div key={date} className="be-detail-rate-row be-detail-rate-row--sub">
+                          <span>{formatDateLong(date)}</span>
+                          <span>{formatCurrency(d.afterTax, currency)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {displayDeposit > 0 && (
+                    <div className="be-detail-rate-row be-detail-rate-row--sub be-detail-deposit">
+                      <span>Deposit due now</span>
+                      <span>{formatCurrency(displayDeposit, currency)}</span>
+                    </div>
+                  )}
+                  {displayCancelDesc && (
+                    <p className="be-detail-cancel" style={{ whiteSpace: "pre-line" }}>{displayCancelDesc}</p>
+                  )}
+                </div>
+                <button type="button" className="btn btn-gold be-full-btn" onClick={() => setView("guests")}>
+                  Continue to guest details
+                </button>
+              </aside>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* ═══════════════ VIEW: GUEST & PAYMENT CHECKOUT ═══════════════ */}
       {(view === "guests" || view === "payment") && selected && (
@@ -833,7 +847,7 @@ export default function ResidenceBookingEngine() {
               <div className="be-room-recap">
                 <div className="be-room-recap-left">
                   <span className="be-recap-badge">Selected Room</span>
-                  <h2 className="be-recap-title">{roomName(selected.roomId)}</h2>
+                  <h2 className="be-recap-title">{getRoomDisplay(selected.roomId).name}</h2>
                   <p className="be-recap-meta">
                     <strong>Check In:</strong> {formatDateWithDay(checkIn)} &nbsp;·&nbsp; <strong>Check Out:</strong> {formatDateWithDay(checkOut)} &nbsp;·&nbsp; {selected.nights} Night{selected.nights !== 1 ? "s" : ""}
                   </p>
@@ -1212,7 +1226,7 @@ export default function ResidenceBookingEngine() {
               )}
               <div className="be-confirm-detail">
                 <dt>Accommodation</dt>
-                <dd>{roomName(selected?.roomId || "253372")}</dd>
+                <dd>{getRoomDisplay(selected?.roomId || "253372").name}</dd>
               </div>
               <div className="be-confirm-detail">
                 <dt>Dates</dt>
