@@ -115,6 +115,15 @@ function roomGallery(rid: string): string[] {
 }
 function roomSlug(rid: string) { return STAAH_SLUGS[rid] ?? null; }
 
+function matchesRoomParam(roomId: string, target?: string): boolean {
+  if (!target) return false;
+  return (
+    roomId === target ||
+    SWIFTBOOK_ROOM_IDS[target] === roomId ||
+    STAAH_SLUGS[roomId] === target
+  );
+}
+
 /** Map of STAAH room names to our local slugs for images/specs */
 const STAAH_NAME_TO_SLUG: Record<string, string> = {
   "SUPERIOR ROOM - OUTDOOR AREA": "superior-outdoor",
@@ -208,8 +217,32 @@ export default function BookingEngine() {
   const resultsRef = useRef<HTMLDivElement>(null);
   const searched = useRef(false);
 
+  /* ── Room selection → detail ── */
+  const onSelectRoom = useCallback(async (q: RoomQuote, stayOverride?: { ci: string; co: string; ad: number; ch: number }) => {
+    const ci = stayOverride?.ci ?? checkIn;
+    const co = stayOverride?.co ?? checkOut;
+    const ad = stayOverride?.ad ?? adults;
+    const ch = stayOverride?.ch ?? children;
+    setSelected(q);
+    setRateDetail(null);
+    setRateLoading(true);
+    setView("detail");
+    setGalleryIdx(0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    trackEvent("Form View Loaded", "ROOM_SELECTED", {
+      checkin: ci, checkout: co,
+      proc_detail: `Checkin:${formatDateTracker(ci)}|Checkout:${formatDateTracker(co)}`,
+    });
+    try {
+      const detail = await fetchRateCart({ checkIn: ci, checkOut: co, adults: ad, children: ch }, q.roomId, q.rateId);
+      setRateDetail(detail);
+      setCurrency(detail.currency);
+    } catch (err) { console.warn("[ratecart] failed:", err); }
+    finally { setRateLoading(false); }
+  }, [checkIn, checkOut, adults, children]);
+
   /* ── Search ── */
-  const doSearch = useCallback(async (ci: string, co: string, ad: number, ch: number) => {
+  const doSearch = useCallback(async (ci: string, co: string, ad: number, ch: number, autoSelectRoom?: string) => {
     setLoading(true);
     setError("");
     setView("results");
@@ -219,7 +252,14 @@ export default function BookingEngine() {
       const result = await fetchAvailability({ checkIn: ci, checkOut: co, adults: ad, children: ch });
       setCurrency(result.currency);
       setQuotes(result.quotes);
-      if (result.quotes.length === 0) setError("No rooms found. Try different dates.");
+      if (result.quotes.length === 0) {
+        setError("No rooms found. Try different dates.");
+      } else if (autoSelectRoom) {
+        const match = result.quotes.find(q => matchesRoomParam(q.roomId, autoSelectRoom));
+        if (match && match.available) {
+          onSelectRoom(match, { ci, co, ad, ch });
+        }
+      }
       trackEvent("Search", `Checkin:${ci}|Checkout:${co}`, {
         checkin: ci, checkout: co,
         proc_detail: `Checkin:${formatDateTracker(ci)}|Checkout:${formatDateTracker(co)}`,
@@ -229,7 +269,7 @@ export default function BookingEngine() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [onSelectRoom]);
 
   useEffect(() => {
     if (searched.current) return;
@@ -238,10 +278,11 @@ export default function BookingEngine() {
     const co = p.get("checkOut") ?? defs.checkOut;
     const ad = Number(p.get("adults")) || 2;
     const ch = Number(p.get("children")) || 0;
-    highlightSlug.current = p.get("room") ?? undefined;
+    const roomParam = p.get("room") ?? undefined;
+    highlightSlug.current = roomParam;
     setCheckIn(ci); setCheckOut(co); setAdults(ad); setChildren(ch);
     searched.current = true;
-    doSearch(ci, co, ad, ch);
+    doSearch(ci, co, ad, ch, roomParam);
 
     // Fetch widget config for official STAAH room names + limits
     fetchWidgetConfig().then(wc => {
@@ -275,26 +316,6 @@ export default function BookingEngine() {
     doSearch(ci, co, adults, children);
     setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
   };
-
-  /* ── Room selection → detail ── */
-  const onSelectRoom = useCallback(async (q: RoomQuote) => {
-    setSelected(q);
-    setRateDetail(null);
-    setRateLoading(true);
-    setView("detail");
-    setGalleryIdx(0);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    trackEvent("Form View Loaded", "ROOM_SELECTED", {
-      checkin: checkIn, checkout: checkOut,
-      proc_detail: `Checkin:${formatDateTracker(checkIn)}|Checkout:${formatDateTracker(checkOut)}`,
-    });
-    try {
-      const detail = await fetchRateCart({ checkIn, checkOut, adults, children }, q.roomId, q.rateId);
-      setRateDetail(detail);
-      setCurrency(detail.currency);
-    } catch (err) { console.warn("[ratecart] failed:", err); }
-    finally { setRateLoading(false); }
-  }, [checkIn, checkOut, adults, children]);
 
   /* ── Guest form → payment ── */
   const onGuestSubmit = (e: React.FormEvent) => {
@@ -563,7 +584,7 @@ export default function BookingEngine() {
                   const hl = roomHighlights(q.roomId);
                   const name = roomName(q.roomId);
                   const slug = roomSlug(q.roomId);
-                  const isHL = highlightSlug.current && slug === highlightSlug.current;
+                  const isHL = matchesRoomParam(q.roomId, highlightSlug.current);
                   const showUrgency = q.minInventory > 0 && q.minInventory <= 3;
                   return (
                     <div key={q.roomId} className={`be-card${isHL ? " be-card--hl" : ""}`}>
