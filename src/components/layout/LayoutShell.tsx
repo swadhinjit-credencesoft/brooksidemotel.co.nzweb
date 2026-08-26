@@ -6,7 +6,7 @@ import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import RevealObserver from "@/components/ui/RevealObserver";
 
-const HIDE_CHROME_PATHS = ["/book"];
+const HIDE_CHROME_PATHS = ["/book", "/book-residence"];
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

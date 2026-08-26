@@ -19,9 +19,9 @@ export default function HomeHero() {
             from Christchurch Airport.
           </p>
           <div className="hero-actions">
-            <a className="btn btn-cream" href="/book">
+            {/* <a className="btn btn-cream" href="/book">
               Search availability
-            </a>
+            </a> */}
             <Link className="btn btn-ghost-light" href="/motel-rooms">
               View motel rooms
             </Link>
