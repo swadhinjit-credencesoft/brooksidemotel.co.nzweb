@@ -83,12 +83,12 @@ export default function AmenitiesSection() {
               <p>On-site laundry facilities available upon request.</p>
             </div>
           </div>
-          <p className="sec-foot rv">
-            <Link className="btn btn-ghost-light" href="/amenities">
-              View all amenities
-            </Link>
-          </p>
         </div>
+        <p className="sec-foot rv">
+          <Link className="btn btn-ghost-light" href="/amenities">
+            View all amenities
+          </Link>
+        </p>
       </div>
     </section>
   );
