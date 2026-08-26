@@ -38,6 +38,7 @@ import {
   RESIDENCE_PROPERTY_ID_B64,
   RESIDENCE_PROPERTY_ID_DEC,
   RESIDENCE_TRACKER_ID_B64,
+  RESIDENCE_RATE_PLAN_ID,
 } from "@/lib/site";
 
 /* ─────────────────────────────────────────────────────────────────────
@@ -85,6 +86,8 @@ export interface ResidenceSearchParams {
 export async function fetchResidenceAvailability(
   params: ResidenceSearchParams
 ): Promise<{ quotes: RoomQuote[]; currency: string }> {
+  const nights = Math.max(1, nightsBetween(params.checkIn, params.checkOut));
+
   const body = {
     Product: "no",
     PropertyId: RESIDENCE_PROPERTY_ID_B64,
@@ -109,14 +112,23 @@ export async function fetchResidenceAvailability(
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
 
-  if (!res.ok) throw new Error(`bedataguest (residence) failed: HTTP ${res.status}`);
-  const json = (await res.json()) as BdgtResponse;
+  if (!res.ok) {
+    throw new Error(`STAAH API availability check failed: HTTP ${res.status}`);
+  }
 
+  const json = (await res.json()) as BdgtResponse;
   const product = json.Product?.[0];
   const currency = product?.Currency ?? "NZD";
-  const nights = nightsBetween(params.checkIn, params.checkOut);
+  const rawRooms = product?.Rooms ?? [];
 
-  const quotes: RoomQuote[] = (product?.Rooms ?? []).map((r) => {
+  if (rawRooms.length === 0) {
+    return { quotes: [], currency };
+  }
+
+  const quotes: RoomQuote[] = [];
+  const needsRatecart: { roomId: string; rateId: string }[] = [];
+
+  for (const r of rawRooms) {
     const plan = r.RatePlans?.[0];
     const rateDates = plan?.Rates?.[0]?.Dates ?? {};
     const nightlyRates: { date: string; beforeTax: number; afterTax: number }[] = [];
@@ -131,22 +143,62 @@ export async function fetchResidenceAvailability(
     nightlyRates.sort((a, b) => a.date.localeCompare(b.date));
 
     const available =
-      r.Roommatch === "fullmatch" && (r.MinInventory ?? 0) > 0;
+      (r.Roommatch === "fullmatch" || r.Roommatch === undefined) &&
+      (r.MinInventory === undefined || r.MinInventory > 0);
 
-    return {
+    const rateId = plan?.RateId ?? RESIDENCE_RATE_PLAN_ID;
+
+    if (available && nightlyRates.length === 0) {
+      needsRatecart.push({ roomId: r.RoomId, rateId });
+    }
+
+    quotes.push({
       roomId: r.RoomId,
       available,
       restrictionTitle: r.RestrictionTitle ?? "",
-      minInventory: r.MinInventory ?? 0,
+      minInventory: r.MinInventory ?? 1,
       currency,
       total,
       minNightly: nightlyRates.length > 0 ? Math.min(...nightlyRates.map((n) => n.afterTax)) : null,
       nightlyRates,
       nights,
       cancellationDesc: plan?.CancellationPolicy?.Description ?? "",
-      rateId: plan?.RateId ?? "",
-    };
-  });
+      rateId,
+    });
+  }
+
+  // Resolve live rate details via ratecart for rooms missing inline rates in bedataguest
+  if (needsRatecart.length > 0) {
+    const rateResults = await Promise.allSettled(
+      needsRatecart.map(async ({ roomId, rateId }) => {
+        const detail = await fetchResidenceRateCart(params, roomId, rateId);
+        return { roomId, detail };
+      })
+    );
+
+    for (const result of rateResults) {
+      if (result.status === "fulfilled") {
+        const { roomId, detail } = result.value;
+        const quote = quotes.find((q) => q.roomId === roomId);
+        if (quote && detail.totalAmount > 0) {
+          quote.total = detail.totalAmount;
+          quote.currency = detail.currency;
+          if (detail.cancellationDesc) {
+            quote.cancellationDesc = detail.cancellationDesc;
+          }
+          const nRates: { date: string; beforeTax: number; afterTax: number }[] = [];
+          for (const [date, day] of Object.entries(detail.perDay)) {
+            nRates.push({ date, beforeTax: day.beforeTax, afterTax: day.afterTax });
+          }
+          if (nRates.length > 0) {
+            nRates.sort((a, b) => a.date.localeCompare(b.date));
+            quote.nightlyRates = nRates;
+            quote.minNightly = Math.min(...nRates.map((n) => n.afterTax));
+          }
+        }
+      }
+    }
+  }
 
   return { quotes, currency };
 }
@@ -154,26 +206,18 @@ export async function fetchResidenceAvailability(
 /* ─────────────────────────────────────────────────────────────────────
    2. ratecart — confirmed rate detail for selected room
       POST https://csbe.staah.net/?RequestType=ratecart&JDRN=Y
-
-      VERIFIED body from network capture:
-      {
-        Other: { Country: "IN", DeviceType: "desktop", Lang: "EN" },
-        Request: [{
-          PropertyId: "622NTg...",
-          Currency: "NZD",
-          PromoCode: "",
-          Room: [{
-            RoomId: "253372",
-            RatePlanId: "1513400000000001",
-            CheckInDate: "2026-08-26",
-            CheckOutDate: "2026-08-28",
-            Adult: 2,
-            Children: [],
-            UniqId: "<uuid>"
-          }]
-        }]
-      }
    ───────────────────────────────────────────────────────────────────── */
+
+function safeUUID(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
 
 export async function fetchResidenceRateCart(
   params: ResidenceSearchParams,
@@ -181,13 +225,12 @@ export async function fetchResidenceRateCart(
   rateId: string,
   promoCode = ""
 ): Promise<RateDetail> {
-  const uniqId = crypto.randomUUID();
+  const uniqId = safeUUID();
+  const resolvedRateId = rateId || RESIDENCE_RATE_PLAN_ID;
 
-  // Residence uses a DIFFERENT ratecart body format (Request array, not flat body)
-  // Verified from live capture (2026-08-26)
   const body = {
     Other: {
-      Country: "NZ",
+      Country: "IN",
       DeviceType: "desktop",
       Lang: "EN",
     },
@@ -199,7 +242,7 @@ export async function fetchResidenceRateCart(
         Room: [
           {
             RoomId: roomId,
-            RatePlanId: rateId,
+            RatePlanId: resolvedRateId,
             CheckInDate: params.checkIn,
             CheckOutDate: params.checkOut,
             Adult: params.adults,
@@ -218,15 +261,16 @@ export async function fetchResidenceRateCart(
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
 
-  if (!res.ok) throw new Error(`ratecart (residence) failed: HTTP ${res.status}`);
-  const json = (await res.json()) as RateCartResponse;
+  if (!res.ok) {
+    throw new Error(`STAAH ratecart failed: HTTP ${res.status}`);
+  }
 
-  // Response is keyed: Product[PROPERTY_ID_DEC][uniqId]
+  const json = (await res.json()) as RateCartResponse;
   const propBlock = json.Product?.[RESIDENCE_PROPERTY_ID_DEC];
-  if (!propBlock) throw new Error("ratecart (residence): no product data");
+  if (!propBlock) throw new Error("STAAH ratecart: no product data returned");
 
   const uuid = Object.keys(propBlock)[0];
-  if (!uuid) throw new Error("ratecart (residence): no rate entry");
+  if (!uuid) throw new Error("STAAH ratecart: no rate entry found");
 
   const entry = propBlock[uuid];
   const days = entry.Rates ?? {};

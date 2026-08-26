@@ -117,6 +117,16 @@ function formatDateTracker(d: string): string {
   return `${day}-${m}-${y}`;
 }
 
+function roomName(rid: string): string {
+  if (rid === "253371") return "Brookside Residence – 4-Bedroom Luxury Home (Exclusive Spa)";
+  return "Brookside Residence – 4-Bedroom Luxury Home";
+}
+
+function roomHeroImage(rid: string): string {
+  if (rid === "253371") return "/images/residenceimage/residence4.png";
+  return "/images/residenceimage/residencefullview.png";
+}
+
 /* ------------------------------------------------------------------ */
 /*  Residence Booking Engine Component (Same UI as /book)              */
 /* ------------------------------------------------------------------ */
@@ -420,14 +430,14 @@ export default function ResidenceBookingEngine() {
         <div className="be-summary-room-card">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={RESIDENCE_HERO}
-            alt={RESIDENCE_ROOM_NAME}
+            src={roomHeroImage(selected.roomId)}
+            alt={roomName(selected.roomId)}
             className="be-summary-room-thumb"
             width={80}
             height={60}
           />
           <div className="be-summary-room-info">
-            <p className="be-summary-room-title">{RESIDENCE_ROOM_NAME}</p>
+            <p className="be-summary-room-title">{roomName(selected.roomId)}</p>
             <span className="be-summary-room-badge">4-Bedroom Luxury Home · Instant confirmation</span>
           </div>
         </div>
@@ -474,7 +484,9 @@ export default function ResidenceBookingEngine() {
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           <strong>Cancellation Policy</strong>
         </div>
-        <p>• You will be charged the total price of the reservation if you cancel up to 2 days before arrival • No shows will incur cancellation fee</p>
+        <p style={{ whiteSpace: "pre-line" }}>
+          {displayCancelDesc || "• You will be charged the total price of the reservation if you cancel up to 2 days before arrival • No shows will incur cancellation fee"}
+        </p>
       </div>
 
       <div className="be-summary-trust-badge">
@@ -619,7 +631,7 @@ export default function ResidenceBookingEngine() {
                     <div key={q.roomId} className="be-card be-card--hl">
                       <div className="be-card-img-wrap">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img className="be-card-img" src={RESIDENCE_HERO} alt={RESIDENCE_ROOM_NAME} width={280} height={240} loading="lazy" />
+                        <img className="be-card-img" src={roomHeroImage(q.roomId)} alt={roomName(q.roomId)} width={280} height={240} loading="lazy" />
                         <div className="be-card-img-overlay" />
                         <span className="be-card-badge be-card-badge--hl">Flagship Home</span>
                         {showUrgency && <span className="be-card-badge be-card-badge--urgency">Only {q.minInventory} available</span>}
@@ -633,7 +645,7 @@ export default function ResidenceBookingEngine() {
                       </div>
                       <div className="be-card-body">
                         <div className="be-card-header">
-                          <h3 className="be-card-name">{RESIDENCE_ROOM_NAME}</h3>
+                          <h3 className="be-card-name">{roomName(q.roomId)}</h3>
                           <span className="be-card-plan">Whole Luxury Home · Instant confirmation</span>
                         </div>
                         <div className="be-card-specs">
@@ -671,6 +683,14 @@ export default function ResidenceBookingEngine() {
                             setSelected(q);
                             setView("guests");
                             window.scrollTo({ top: 0, behavior: "smooth" });
+                            if (!rateDetail) {
+                              fetchResidenceRateCart({ checkIn, checkOut, adults, children }, q.roomId, q.rateId)
+                                .then((d) => {
+                                  setRateDetail(d);
+                                  setCurrency(d.currency);
+                                })
+                                .catch(() => {});
+                            }
                           }}
                         >
                           {q.total > 0 ? "Book now →" : "Check availability"}
@@ -724,7 +744,7 @@ export default function ResidenceBookingEngine() {
           <div className="be-detail-body">
             {/* Left: residence info */}
             <div className="be-detail-info">
-              <h2 className="be-detail-name">{RESIDENCE_ROOM_NAME}</h2>
+              <h2 className="be-detail-name">{roomName(selected.roomId)}</h2>
               <div className="be-detail-specs">
                 {RESIDENCE_SPECS.map((s, i) => <span key={i} className="be-spec">{s}</span>)}
               </div>
@@ -787,7 +807,7 @@ export default function ResidenceBookingEngine() {
                   </div>
                 )}
                 {displayCancelDesc && (
-                  <p className="be-detail-cancel">{displayCancelDesc}</p>
+                  <p className="be-detail-cancel" style={{ whiteSpace: "pre-line" }}>{displayCancelDesc}</p>
                 )}
               </div>
               <button type="button" className="btn btn-gold be-full-btn" onClick={() => setView("guests")}>
@@ -813,7 +833,7 @@ export default function ResidenceBookingEngine() {
               <div className="be-room-recap">
                 <div className="be-room-recap-left">
                   <span className="be-recap-badge">Selected Room</span>
-                  <h2 className="be-recap-title">{RESIDENCE_ROOM_NAME}</h2>
+                  <h2 className="be-recap-title">{roomName(selected.roomId)}</h2>
                   <p className="be-recap-meta">
                     <strong>Check In:</strong> {formatDateWithDay(checkIn)} &nbsp;·&nbsp; <strong>Check Out:</strong> {formatDateWithDay(checkOut)} &nbsp;·&nbsp; {selected.nights} Night{selected.nights !== 1 ? "s" : ""}
                   </p>
@@ -1192,7 +1212,7 @@ export default function ResidenceBookingEngine() {
               )}
               <div className="be-confirm-detail">
                 <dt>Accommodation</dt>
-                <dd>{RESIDENCE_ROOM_NAME}</dd>
+                <dd>{roomName(selected?.roomId || "253372")}</dd>
               </div>
               <div className="be-confirm-detail">
                 <dt>Dates</dt>
