@@ -29,6 +29,19 @@ function defaultDates() {
   return { checkIn: ci, checkOut: addDays(ci, 1) };
 }
 
+function formatDateWithDay(iso: string): string {
+  if (!iso) return "";
+  const parts = iso.split("-");
+  if (parts.length < 3) return iso;
+  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  return d.toLocaleDateString("en-NZ", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
 function roomImage(rid: string): { src: string; alt: string } {
   const slug = STAAH_SLUGS[rid];
   if (slug) { const d = getRoom(slug); if (d) return { src: d.image.src, alt: d.image.alt }; }
@@ -155,8 +168,22 @@ interface ConfirmationData {
 /* ------------------------------------------------------------------ */
 
 const ARRIVAL_TIMES = [
-  "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
-  "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM",
+  "12:00 pm", "01:00 pm", "02:00 pm", "03:00 pm", "04:00 pm",
+  "05:00 pm", "06:00 pm", "07:00 pm", "08:00 pm", "09:00 pm",
+  "10:00 pm (Late arrival)",
+];
+
+const COUNTRY_DIAL_CODES = [
+  { code: "+64", country: "NZ", flag: "🇳🇿", name: "NZ (+64)" },
+  { code: "+61", country: "AU", flag: "🇦🇺", name: "AU (+61)" },
+  { code: "+44", country: "GB", flag: "🇬🇧", name: "UK (+44)" },
+  { code: "+1", country: "US", flag: "🇺🇸", name: "US (+1)" },
+  { code: "+91", country: "IN", flag: "🇮🇳", name: "IN (+91)" },
+  { code: "+86", country: "CN", flag: "🇨🇳", name: "CN (+86)" },
+  { code: "+81", country: "JP", flag: "🇯🇵", name: "JP (+81)" },
+  { code: "+65", country: "SG", flag: "🇸🇬", name: "SG (+65)" },
+  { code: "+49", country: "DE", flag: "🇩🇪", name: "DE (+49)" },
+  { code: "+33", country: "FR", flag: "🇫🇷", name: "FR (+33)" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -185,16 +212,30 @@ export default function BookingEngine() {
   const [rateLoading, setRateLoading] = useState(false);
   const highlightSlug = useRef<string | undefined>(undefined);
 
-  // Guest form
+  // Guest & Checkout form
   const [guestForm, setGuestForm] = useState({
-    firstName: "", lastName: "", email: "", phone: "",
-    arrivalTime: "3:00 PM", requests: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    countryCode: "+64",
+    bookingForOther: false,
+    otherGuestName: "",
+    arrivalTime: "02:00 pm",
+    requests: "",
+    promoCode: "",
+    promoOpen: false,
+    newsletter: true,
+    termsAgreed: true,
   });
   const [guestErrors, setGuestErrors] = useState<Record<string, string>>({});
 
   // Payment form
   const [ccForm, setCcForm] = useState({
-    cardNumber: "", expiry: "", cvv: "", nameOnCard: "",
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+    nameOnCard: "",
   });
   const [ccErrors, setCcErrors] = useState<Record<string, string>>({});
 
@@ -332,21 +373,48 @@ export default function BookingEngine() {
     }
   };
 
-  /* ── Payment → create booking + process payment ── */
+  /* ── Unified Checkout → create booking + process payment ── */
   const onPaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selected) return;
-    const errs: Record<string, string> = {};
+
+    const gErrs: Record<string, string> = {};
+    if (!guestForm.firstName.trim()) gErrs.firstName = "First name is required";
+    if (!guestForm.lastName.trim()) gErrs.lastName = "Last name is required";
+    if (!guestForm.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestForm.email)) gErrs.email = "Valid email is required";
+    if (!guestForm.phone.trim()) gErrs.phone = "Phone number is required";
+    setGuestErrors(gErrs);
+
+    const cErrs: Record<string, string> = {};
     const ccNum = ccForm.cardNumber.replace(/\s/g, "");
-    if (ccNum.length < 13 || ccNum.length > 19) errs.cardNumber = "Valid card number required";
-    if (!/^\d{2}\/\d{2}$/.test(ccForm.expiry)) errs.expiry = "MM/YY format";
-    if (ccForm.cvv.length < 3) errs.cvv = "CVV required";
-    if (!ccForm.nameOnCard.trim()) errs.nameOnCard = "Required";
-    setCcErrors(errs);
-    if (Object.keys(errs).length > 0) return;
+    if (ccNum.length < 13 || ccNum.length > 19) cErrs.cardNumber = "Valid card number required (13–19 digits)";
+    if (!/^\d{2}\s*\/?\s*\d{2}$/.test(ccForm.expiry)) cErrs.expiry = "Expiry required (MM / YY)";
+    if (ccForm.cvv.length < 3) cErrs.cvv = "CVV required (3–4 digits)";
+    if (!ccForm.nameOnCard.trim()) cErrs.nameOnCard = "Name on card is required";
+    setCcErrors(cErrs);
+
+    if (Object.keys(gErrs).length > 0 || Object.keys(cErrs).length > 0) {
+      setTimeout(() => {
+        const firstErr = document.querySelector(".be-field-error");
+        if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 50);
+      return;
+    }
+
+    if (!guestForm.termsAgreed) {
+      alert("Please agree to the Terms and Conditions to complete your booking.");
+      return;
+    }
 
     setBookingLoading(true);
     setBookingError("");
+
+    const fullPhone = `${guestForm.countryCode} ${guestForm.phone.trim()}`;
+    const specialRequests = [
+      guestForm.bookingForOther && guestForm.otherGuestName ? `Staying Guest: ${guestForm.otherGuestName}` : "",
+      guestForm.requests.trim(),
+      guestForm.promoCode.trim() ? `Promo: ${guestForm.promoCode.trim()}` : "",
+    ].filter(Boolean).join(" | ");
 
     try {
       // Step 1: Create booking
@@ -357,16 +425,15 @@ export default function BookingEngine() {
           firstName: guestForm.firstName,
           lastName: guestForm.lastName,
           email: guestForm.email,
-          phone: guestForm.phone,
+          phone: fullPhone,
           arrivalTime: guestForm.arrivalTime,
-          requests: guestForm.requests,
+          requests: specialRequests,
         }
       );
 
       const bookingId = bookingResult.BookingId ?? bookingResult.ConfirmationNumber ?? "";
 
       if (bookingResult.PaymentUrl) {
-        // If the API returns a payment URL, redirect there
         setConfirmation({
           bookingId,
           message: bookingResult.Message ?? "Booking created. Redirecting to payment…",
@@ -381,14 +448,14 @@ export default function BookingEngine() {
         bookingId,
         {
           cardNumber: ccForm.cardNumber,
-          expiry: ccForm.expiry,
+          expiry: ccForm.expiry.replace(/\s+/g, ""),
           cvv: ccForm.cvv,
         },
         {
           firstName: guestForm.firstName,
           lastName: guestForm.lastName,
           email: guestForm.email,
-          phone: guestForm.phone,
+          phone: fullPhone,
         }
       );
 
@@ -406,7 +473,7 @@ export default function BookingEngine() {
         checkin: checkIn, checkout: checkOut,
       });
     } catch (err) {
-      setBookingError(err instanceof Error ? err.message : "Booking failed. Please try again or contact us.");
+      setBookingError(err instanceof Error ? err.message : "Booking failed. Please check your card details and try again.");
     } finally {
       setBookingLoading(false);
     }
@@ -451,42 +518,100 @@ export default function BookingEngine() {
     }
     return {};
   })();
-  const setGuest = (field: string, value: string) => setGuestForm(prev => ({ ...prev, [field]: value }));
+  const setGuest = (field: string, value: string | boolean) => setGuestForm(prev => ({ ...prev, [field]: value }));
   const setCc = (field: string, value: string) => setCcForm(prev => ({ ...prev, [field]: value }));
 
   /* ── Summary sidebar (reused) ── */
-  const SummarySidebar = () => (
-    <aside className="be-summary">
-      <h3>Booking summary</h3>
-      {selected && <p className="be-summary-room">{roomName(selected.roomId)}</p>}
-      <dl className="be-summary-dl">
-        <dt>Dates</dt>
-        <dd>{formatDateLong(checkIn)} – {formatDateLong(checkOut)}</dd>
-        <dt>Nights</dt>
-        <dd>{selected?.nights ?? "—"}</dd>
-        <dt>Guests</dt>
-        <dd>{adults} adult{adults !== 1 ? "s" : ""}{children > 0 ? `, ${children} child${children !== 1 ? "ren" : ""}` : ""}</dd>
-      </dl>
-      {!rateLoading && perDay && (
-        <div className="be-rate-breakdown">
-          {Object.entries(perDay).map(([date, d]) => (
-            <div key={date} className="be-rate-day">
-              <span className="be-rate-date">{formatDateLong(date)}</span>
-              <span className="be-rate-amount">{formatCurrency(d.afterTax, currency)}</span>
-            </div>
-          ))}
+  const SummarySidebar = () => {
+    const img = selected ? roomImage(selected.roomId) : null;
+    return (
+      <aside className="be-summary">
+        <div className="be-summary-head">
+          <h3>Booking Summary</h3>
+          {selected && (
+            <button
+              type="button"
+              className="be-summary-change-btn"
+              onClick={() => {
+                setView("results");
+                setSelected(null);
+              }}
+            >
+              Change room
+            </button>
+          )}
         </div>
-      )}
-      <div className="be-summary-total">
-        <span>Total</span>
-        <strong>{rateLoading ? "\u2014" : formatCurrency(displayTotal, currency)}</strong>
-      </div>
-      {displayDeposit > 0 && (
-        <p className="be-deposit-note">Deposit due now: {formatCurrency(displayDeposit, currency)}</p>
-      )}
-      {displayCancelDesc && <p className="be-summary-cancel">{displayCancelDesc}</p>}
-    </aside>
-  );
+
+        {selected && (
+          <div className="be-summary-room-card">
+            {img && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="be-summary-room-thumb"
+                width={80}
+                height={60}
+              />
+            )}
+            <div className="be-summary-room-info">
+              <p className="be-summary-room-title">{roomName(selected.roomId)}</p>
+              <span className="be-summary-room-badge">Boutique Room · Instant confirmation</span>
+            </div>
+          </div>
+        )}
+
+        <dl className="be-summary-dl">
+          <dt>Dates</dt>
+          <dd>{formatDateWithDay(checkIn)} – {formatDateWithDay(checkOut)}</dd>
+          <dt>Length of Stay</dt>
+          <dd>{selected?.nights ?? 1} Night{(selected?.nights ?? 1) !== 1 ? "s" : ""}</dd>
+          <dt>Guests</dt>
+          <dd>{adults} Adult{adults !== 1 ? "s" : ""}{children > 0 ? `, ${children} Child${children !== 1 ? "ren" : ""}` : ""}</dd>
+        </dl>
+
+        {!rateLoading && perDay && Object.keys(perDay).length > 0 && (
+          <div className="be-rate-breakdown">
+            <div className="be-rate-breakdown-title">Daily breakdown</div>
+            {Object.entries(perDay).map(([date, d]) => (
+              <div key={date} className="be-rate-day">
+                <span className="be-rate-date">{formatDateWithDay(date)}</span>
+                <span className="be-rate-amount">{formatCurrency(d.afterTax, currency)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="be-summary-total">
+          <div>
+            <span>Total</span>
+            <small className="be-price-sublabel">( Price breakdown )</small>
+          </div>
+          <div className="be-summary-total-right">
+            <strong>{rateLoading ? "—" : formatCurrency(displayTotal, currency)}</strong>
+            <small className="be-summary-tax-note">Includes 15% GST · Zero fees</small>
+          </div>
+        </div>
+
+        {displayDeposit > 0 && (
+          <p className="be-deposit-note">Deposit due now: {formatCurrency(displayDeposit, currency)}</p>
+        )}
+
+        <div className="be-summary-cancel">
+          <div className="be-summary-cancel-head">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <strong>Cancellation Policy</strong>
+          </div>
+          <p>• You will be charged the total price of the reservation if you cancel up to 2 days before arrival • No shows will incur cancellation fee</p>
+        </div>
+
+        <div className="be-summary-trust-badge">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span>Official Direct Booking Guarantee</span>
+        </div>
+      </aside>
+    );
+  };
 
   /* ── RENDER ── */
   return (
@@ -496,13 +621,17 @@ export default function BookingEngine() {
       <div className="be-brand">
         <a href="/" className="be-brand-link">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="be-brand-logo" src="/logos/logo-pine.png" alt="Brookside Motel" width={200} height={40} />
+          <img className="be-brand-logo" src="/logos/logo-pine.png" alt="Brookside Motel" width={220} height={44} />
+          <span className="be-brand-sub">Boutique Accommodation · Rolleston, Canterbury</span>
         </a>
         <div className="be-brand-right">
-          <span className="be-brand-tagline">Secure direct booking</span>
+          <div className="be-brand-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span>Official Direct Booking</span>
+          </div>
           <a href="tel:+6439300060" className="be-brand-phone">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" /></svg>
-            +64 3 930 0060
+            <span>+64 3 930 0060</span>
           </a>
         </div>
       </div>
@@ -512,51 +641,83 @@ export default function BookingEngine() {
         <form className="be-bar-form" onSubmit={onSearchSubmit}>
           <div className="be-bar-fields">
             <div className="be-bar-field">
-              <label htmlFor="bb-ci">Check-in</label>
+              <div className="be-bar-field-head">
+                <label htmlFor="bb-ci">Check-in</label>
+                {calendarInv[checkIn] !== undefined && (
+                  <span className={`be-avail-hint${calendarInv[checkIn] > 0 ? " be-avail-hint--ok" : " be-avail-hint--no"}`}>
+                    {calendarInv[checkIn] > 0 ? "✓ Available" : "Sold out"}
+                  </span>
+                )}
+              </div>
               <input id="bb-ci" type="date" value={checkIn} min={todayISO()} onChange={e => setCheckIn(e.target.value)} required />
-              {calendarInv[checkIn] !== undefined && (
-                <span className={`be-avail-hint${calendarInv[checkIn] > 0 ? " be-avail-hint--ok" : " be-avail-hint--no"}`}>
-                  {calendarInv[checkIn] > 0 ? "✓ Available" : "Sold out"}
-                </span>
-              )}
             </div>
             <div className="be-bar-field">
-              <label htmlFor="bb-co">Check-out</label>
+              <div className="be-bar-field-head">
+                <label htmlFor="bb-co">Check-out</label>
+              </div>
               <input id="bb-co" type="date" value={checkOut} min={checkIn || todayISO()} onChange={e => setCheckOut(e.target.value)} required />
             </div>
             <div className="be-bar-field">
-              <label htmlFor="bb-ad">Adults</label>
+              <div className="be-bar-field-head">
+                <label htmlFor="bb-ad">Adults</label>
+              </div>
               <select id="bb-ad" value={adults} onChange={e => setAdults(Number(e.target.value))}>
-                {Array.from({ length: maxAdults }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n}</option>)}
+                {Array.from({ length: maxAdults }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n} Adult{n !== 1 ? "s" : ""}</option>)}
               </select>
             </div>
             <div className="be-bar-field">
-              <label htmlFor="bb-ch">Children</label>
+              <div className="be-bar-field-head">
+                <label htmlFor="bb-ch">Children</label>
+              </div>
               <select id="bb-ch" value={children} onChange={e => setChildren(Number(e.target.value))}>
-                {Array.from({ length: maxChildren + 1 }, (_, i) => i).map(n => <option key={n} value={n}>{n}</option>)}
+                {Array.from({ length: maxChildren + 1 }, (_, i) => i).map(n => <option key={n} value={n}>{n} Child{n !== 1 ? "ren" : ""}</option>)}
               </select>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary be-bar-btn" disabled={loading}>
-            {loading ? "Searching\u2026" : "Search"}
+          <button type="submit" className="btn btn-gold be-bar-btn" disabled={loading}>
+            {loading ? "Searching…" : "Search"}
           </button>
         </form>
       </div>
 
+      {/* ═══════════════ DIRECT BOOKING PERKS STRIP ═══════════════ */}
+      <div className="be-perks-strip">
+        <div className="be-perk-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>Best Direct Rate Guaranteed</span>
+        </div>
+        <div className="be-perk-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Free 48h Cancellation</span>
+        </div>
+        <div className="be-perk-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+          <span>Free High-Speed Wi-Fi</span>
+        </div>
+        <div className="be-perk-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2 5 14h6l-2 8 8-12h-6l2-8z"/></svg>
+          <span>Free Parking &amp; EV Power</span>
+        </div>
+      </div>
+
       {/* ═══════════════ STEP INDICATOR ═══════════════ */}
       <div className="be-steps">
-        <span className={`be-step${view === "results" || view === "detail" || view === "guests" || view === "payment" || view === "confirm" ? " be-step--active" : ""}`}>
-          <span className="be-step-num">1</span>Select room
-        </span>
-        <span className={`be-step${view === "guests" || view === "payment" || view === "confirm" ? " be-step--active" : ""}`}>
-          <span className="be-step-num">2</span>Guest details
-        </span>
-        <span className={`be-step${view === "payment" || view === "confirm" ? " be-step--active" : ""}`}>
-          <span className="be-step-num">3</span>Payment
-        </span>
-        <span className={`be-step${view === "confirm" ? " be-step--active" : ""}`}>
-          <span className="be-step-num">4</span>Confirmation
-        </span>
+        <button
+          type="button"
+          className={`be-step${view === "results" || view === "detail" ? " be-step--active" : ""}${selected ? " be-step--done" : ""}`}
+          onClick={() => { if (selected) { setView("results"); } }}
+        >
+          <span className="be-step-num">{selected ? "✓" : "1"}</span>
+          <span>1. Select room</span>
+        </button>
+        <div className={`be-step${view === "guests" || view === "payment" ? " be-step--active" : ""}`}>
+          <span className="be-step-num">2</span>
+          <span>2. Guest &amp; Payment details</span>
+        </div>
+        <div className={`be-step${view === "confirm" ? " be-step--active" : ""}`}>
+          <span className="be-step-num">3</span>
+          <span>3. Confirmation</span>
+        </div>
       </div>
 
       {/* ═══════════════ VIEW: RESULTS ═══════════════ */}
@@ -565,17 +726,19 @@ export default function BookingEngine() {
           {loading && (
             <div className="be-loading-inline">
               <div className="be-spinner" aria-hidden="true" />
-              <p>Checking availability&hellip;</p>
+              <p>Checking live availability&hellip;</p>
             </div>
           )}
           {error && !loading && <div className="be-error"><p>{error}</p></div>}
           {!loading && !error && (
             <>
               <div className="be-results-header">
-                <h2 className="be-results-title">
-                  {available.length} room type{available.length !== 1 ? "s" : ""} available
-                </h2>
-                <span className="be-results-sub">{formatDateLong(checkIn)} – {formatDateLong(checkOut)} · {adults} guest{adults !== 1 ? "s" : ""}</span>
+                <div>
+                  <h2 className="be-results-title">
+                    {available.length} room type{available.length !== 1 ? "s" : ""} available
+                  </h2>
+                  <span className="be-results-sub">{formatDateWithDay(checkIn)} – {formatDateWithDay(checkOut)} · {selected?.nights ?? 1} night{(selected?.nights ?? 1) !== 1 ? "s" : ""} · {adults} guest{adults !== 1 ? "s" : ""}</span>
+                </div>
               </div>
               <div className="be-room-grid">
                 {available.map(q => {
@@ -583,7 +746,6 @@ export default function BookingEngine() {
                   const specs = roomSpecs(q.roomId);
                   const hl = roomHighlights(q.roomId);
                   const name = roomName(q.roomId);
-                  const slug = roomSlug(q.roomId);
                   const isHL = matchesRoomParam(q.roomId, highlightSlug.current);
                   const showUrgency = q.minInventory > 0 && q.minInventory <= 3;
                   return (
@@ -593,20 +755,40 @@ export default function BookingEngine() {
                         <div className="be-card-img-overlay" />
                         {isHL && <span className="be-card-badge be-card-badge--hl">Your pick</span>}
                         {showUrgency && !isHL && <span className="be-card-badge be-card-badge--urgency">Only {q.minInventory} left</span>}
+                        <button
+                          type="button"
+                          className="be-card-view-details-btn"
+                          onClick={() => onSelectRoom(q)}
+                        >
+                          View room photos
+                        </button>
                       </div>
                       <div className="be-card-body">
-                        <h3 className="be-card-name">{name}</h3>
-                        {specs.length > 0 && <div className="be-card-specs">{specs.map((s, i) => <span key={i} className="be-spec">{s}</span>)}</div>}
-                        {hl.length > 0 && <ul className="be-card-features">{hl.map((h, i) => <li key={i}>{h}</li>)}</ul>}
+                        <div className="be-card-header">
+                          <h3 className="be-card-name">{name}</h3>
+                          <span className="be-card-plan">Room only · Instant confirmation</span>
+                        </div>
+                        {specs.length > 0 && (
+                          <div className="be-card-specs">
+                            {specs.map((s, i) => <span key={i} className="be-spec">{s}</span>)}
+                          </div>
+                        )}
+                        {hl.length > 0 && (
+                          <ul className="be-card-features">
+                            {hl.slice(0, 4).map((h, i) => <li key={i}>{h}</li>)}
+                          </ul>
+                        )}
                       </div>
                       <div className="be-card-price">
-                        <div className="be-card-nights">{q.nights} night{q.nights !== 1 ? "s" : ""}</div>
+                        <span className="be-price-badge">Direct Special</span>
+                        <div className="be-card-nights">{q.nights} night{q.nights !== 1 ? "s" : ""}, {adults} guest{adults !== 1 ? "s" : ""}</div>
                         {q.total > 0 ? (
                           <>
-                            <div className="be-card-total-label">Total</div>
                             <div className="be-card-total">{formatCurrency(q.total, q.currency)}</div>
-                            {q.minNightly !== null && q.nights > 1 && (
-                              <div className="be-card-nightly">{formatCurrency(q.minNightly, q.currency)} /night</div>
+                            {q.minNightly !== null && q.nights > 1 ? (
+                              <div className="be-card-nightly">{formatCurrency(q.minNightly, q.currency)} / night</div>
+                            ) : (
+                              <div className="be-card-nightly">Total includes all taxes</div>
                             )}
                           </>
                         ) : q.minNightly !== null ? (
@@ -618,8 +800,16 @@ export default function BookingEngine() {
                         ) : (
                           <div className="be-card-total be-card-total--loading">Loading rates&hellip;</div>
                         )}
-                        <button type="button" className={`btn ${q.total > 0 ? "btn-gold" : "btn-primary"} be-card-btn`} onClick={() => onSelectRoom(q)}>
-                          {q.total > 0 ? "Book now" : "Check availability"}
+                        <button
+                          type="button"
+                          className={`btn ${q.total > 0 ? "btn-gold" : "btn-primary"} be-card-btn`}
+                          onClick={() => {
+                            setSelected(q);
+                            setView("guests");
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                        >
+                          {q.total > 0 ? "Book now →" : "Check availability"}
                         </button>
                       </div>
                     </div>
@@ -763,130 +953,376 @@ export default function BookingEngine() {
         </div>
       )}
 
-      {/* ═══════════════ VIEW: GUEST DETAILS ═══════════════ */}
-      {view === "guests" && selected && (
+      {/* ═══════════════ VIEW: GUEST & PAYMENT CHECKOUT ═══════════════ */}
+      {(view === "guests" || view === "payment") && selected && (
         <div className="be-guests-view">
-          <button type="button" className="be-back" onClick={() => setView("detail")}>
+          <button type="button" className="be-back" onClick={() => setView("results")}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-            Back to room details
+            Back to room selection
           </button>
-          <div className="be-guests-split">
-            <div className="be-guest-form">
-              <h2>Guest details</h2>
-              <form onSubmit={onGuestSubmit} style={{display:'contents'}}>
-              <div className="be-form-row">
-                <div className={`be-field${guestErrors.firstName ? " be-field-error" : ""}`}>
-                  <label htmlFor="gf-fn">First name</label>
-                  <input id="gf-fn" type="text" value={guestForm.firstName} onChange={e => setGuest("firstName", e.target.value)} autoComplete="given-name" />
-                  {guestErrors.firstName && <span className="be-field-msg">{guestErrors.firstName}</span>}
+
+          <form onSubmit={onPaymentSubmit} className="be-guests-split" noValidate>
+            <div className="be-checkout-main">
+
+              {/* Room Recap Header */}
+              <div className="be-room-recap">
+                <div className="be-room-recap-left">
+                  <span className="be-recap-badge">Selected Room</span>
+                  <h2 className="be-recap-title">{roomName(selected.roomId)}</h2>
+                  <p className="be-recap-meta">
+                    <strong>Check In:</strong> {formatDateWithDay(checkIn)} &nbsp;·&nbsp; <strong>Check Out:</strong> {formatDateWithDay(checkOut)} &nbsp;·&nbsp; {selected.nights} Night{selected.nights !== 1 ? "s" : ""}
+                  </p>
                 </div>
-                <div className={`be-field${guestErrors.lastName ? " be-field-error" : ""}`}>
-                  <label htmlFor="gf-ln">Last name</label>
-                  <input id="gf-ln" type="text" value={guestForm.lastName} onChange={e => setGuest("lastName", e.target.value)} autoComplete="family-name" />
-                  {guestErrors.lastName && <span className="be-field-msg">{guestErrors.lastName}</span>}
-                </div>
+                <button
+                  type="button"
+                  className="btn btn-ghost be-recap-btn"
+                  onClick={() => {
+                    setView("results");
+                    setSelected(null);
+                  }}
+                >
+                  Book more / Change room
+                </button>
               </div>
-              <div className="be-form-row">
-                <div className={`be-field${guestErrors.email ? " be-field-error" : ""}`}>
-                  <label htmlFor="gf-em">Email</label>
-                  <input id="gf-em" type="email" value={guestForm.email} onChange={e => setGuest("email", e.target.value)} autoComplete="email" />
-                  {guestErrors.email && <span className="be-field-msg">{guestErrors.email}</span>}
+
+              {/* SECTION 1: GUEST DETAILS */}
+              <div className="be-checkout-card">
+                <div className="be-card-section-head">
+                  <span className="be-step-badge">1</span>
+                  <div>
+                    <h3>Guest Details *</h3>
+                    <p>Primary guest staying in this room</p>
+                  </div>
                 </div>
-                <div className={`be-field${guestErrors.phone ? " be-field-error" : ""}`}>
-                  <label htmlFor="gf-ph">Phone</label>
-                  <input id="gf-ph" type="tel" value={guestForm.phone} onChange={e => setGuest("phone", e.target.value)} autoComplete="tel" />
-                  {guestErrors.phone && <span className="be-field-msg">{guestErrors.phone}</span>}
+
+                <div className="be-form-grid be-form-grid--2">
+                  <div className={`be-field${guestErrors.firstName ? " be-field-error" : ""}`}>
+                    <label htmlFor="gf-fn">First Name *</label>
+                    <input
+                      id="gf-fn"
+                      type="text"
+                      placeholder="e.g. John"
+                      value={guestForm.firstName}
+                      onChange={e => setGuest("firstName", e.target.value)}
+                      autoComplete="given-name"
+                      required
+                    />
+                    {guestErrors.firstName && <span className="be-field-msg">{guestErrors.firstName}</span>}
+                  </div>
+                  <div className={`be-field${guestErrors.lastName ? " be-field-error" : ""}`}>
+                    <label htmlFor="gf-ln">Last Name *</label>
+                    <input
+                      id="gf-ln"
+                      type="text"
+                      placeholder="e.g. Smith"
+                      value={guestForm.lastName}
+                      onChange={e => setGuest("lastName", e.target.value)}
+                      autoComplete="family-name"
+                      required
+                    />
+                    {guestErrors.lastName && <span className="be-field-msg">{guestErrors.lastName}</span>}
+                  </div>
                 </div>
-              </div>
-              <div className="be-form-row">
+
+                <div className="be-form-grid be-form-grid--3">
+                  <div className="be-field">
+                    <label htmlFor="gf-ad">Adults</label>
+                    <select id="gf-ad" value={adults} onChange={e => setAdults(Number(e.target.value))}>
+                      {Array.from({ length: maxAdults }, (_, i) => i + 1).map(n => (
+                        <option key={n} value={n}>{n} Adult{n !== 1 ? "s" : ""}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="be-field">
+                    <label htmlFor="gf-ch">Children</label>
+                    <select id="gf-ch" value={children} onChange={e => setChildren(Number(e.target.value))}>
+                      {Array.from({ length: maxChildren + 1 }, (_, i) => i).map(n => (
+                        <option key={n} value={n}>{n} Child{n !== 1 ? "ren" : ""}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="be-field">
+                    <label htmlFor="gf-at">Estimated arrival time</label>
+                    <select id="gf-at" value={guestForm.arrivalTime} onChange={e => setGuest("arrivalTime", e.target.value)}>
+                      {ARRIVAL_TIMES.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+                </div>
+
                 <div className="be-field">
-                  <label htmlFor="gf-at">Arrival time</label>
-                  <select id="gf-at" value={guestForm.arrivalTime} onChange={e => setGuest("arrivalTime", e.target.value)}>
-                    {ARRIVAL_TIMES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div className="be-form-row">
-                <div className="be-field">
-                  <label htmlFor="gf-rq">Special requests</label>
-                  <textarea id="gf-rq" rows={3} value={guestForm.requests} onChange={e => setGuest("requests", e.target.value)} placeholder="Optional — e.g. early check-in, extra pillows" />
-                </div>
-              </div>
-              <button type="submit" className="btn btn-primary be-full-btn">Continue to payment</button>
-              </form>
-            </div>
-            <SummarySidebar />
-          </div>
-        </div>
-      )}
-
-      {/* ═══════════════ VIEW: PAYMENT ═══════════════ */}
-      {view === "payment" && selected && (
-        <div className="be-guests-view">
-          <button type="button" className="be-back" onClick={() => setView("guests")}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-            Back to guest details
-          </button>
-          <div className="be-guests-split">
-            <div className="be-guest-form">
-              <h2>Payment details</h2>
-              <form onSubmit={onPaymentSubmit} style={{display:'contents'}}>
-              <div className="be-secure-badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
-                Secure — your card details are encrypted
-              </div>
-              <div className="be-form-row">
-                <div className={`be-field${ccErrors.nameOnCard ? " be-field-error" : ""}`}>
-                  <label htmlFor="cc-name">Name on card</label>
-                  <input id="cc-name" type="text" value={ccForm.nameOnCard} onChange={e => setCc("nameOnCard", e.target.value)} autoComplete="cc-name" />
-                  {ccErrors.nameOnCard && <span className="be-field-msg">{ccErrors.nameOnCard}</span>}
-                </div>
-              </div>
-              <div className="be-form-row">
-                <div className={`be-field${ccErrors.cardNumber ? " be-field-error" : ""}`}>
-                  <label htmlFor="cc-num">Card number</label>
-                  <input id="cc-num" type="text" inputMode="numeric" placeholder="1234 5678 9012 3456"
-                    value={ccForm.cardNumber} onChange={e => {
-                      const v = e.target.value.replace(/[^\d]/g, "").slice(0, 16);
-                      const formatted = v.replace(/(\d{4})(?=\d)/g, "$1 ");
-                      setCc("cardNumber", formatted);
-                    }} autoComplete="cc-number" />
-                  {ccErrors.cardNumber && <span className="be-field-msg">{ccErrors.cardNumber}</span>}
-                </div>
-              </div>
-              <div className="be-form-row">
-                <div className={`be-field${ccErrors.expiry ? " be-field-error" : ""}`}>
-                  <label htmlFor="cc-exp">Expiry</label>
-                  <input id="cc-exp" type="text" inputMode="numeric" placeholder="MM/YY" maxLength={5}
-                    value={ccForm.expiry} onChange={e => {
-                      let v = e.target.value.replace(/[^\d]/g, "").slice(0, 4);
-                      if (v.length >= 2) v = v.slice(0, 2) + "/" + v.slice(2);
-                      setCc("expiry", v);
-                    }} autoComplete="cc-exp" />
-                  {ccErrors.expiry && <span className="be-field-msg">{ccErrors.expiry}</span>}
-                </div>
-                <div className={`be-field${ccErrors.cvv ? " be-field-error" : ""}`}>
-                  <label htmlFor="cc-cvv">CVV</label>
-                  <input id="cc-cvv" type="text" inputMode="numeric" placeholder="123" maxLength={4}
-                    value={ccForm.cvv} onChange={e => setCc("cvv", e.target.value.replace(/[^\d]/g, "").slice(0, 4))} autoComplete="cc-csc" />
-                  {ccErrors.cvv && <span className="be-field-msg">{ccErrors.cvv}</span>}
+                  <label htmlFor="gf-rq">Special Request</label>
+                  <textarea
+                    id="gf-rq"
+                    rows={2}
+                    value={guestForm.requests}
+                    onChange={e => setGuest("requests", e.target.value)}
+                    placeholder="Special requests (e.g. ground floor, quiet room, late check-in) — subject to availability"
+                  />
                 </div>
               </div>
 
-              {bookingError && <div className="be-error"><p>{bookingError}</p></div>}
+              {/* SECTION 2: CONTACT DETAILS */}
+              <div className="be-checkout-card">
+                <div className="be-card-section-head">
+                  <span className="be-step-badge">2</span>
+                  <div>
+                    <h3>Contact Details</h3>
+                    <p>Where we will send your instant booking confirmation &amp; digital check-in details</p>
+                  </div>
+                </div>
 
-              <button type="submit" className="btn btn-gold be-full-btn" disabled={bookingLoading}>
-                {bookingLoading ? (
-                  <><span className="be-spinner be-spinner--small" /> Processing&hellip;</>
-                ) : (
-                  `Pay ${formatCurrency(displayTotal, currency)} & confirm`
+                <div className="be-checkbox-row">
+                  <label className="be-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={guestForm.bookingForOther}
+                      onChange={e => setGuest("bookingForOther", e.target.checked)}
+                    />
+                    <span>I am booking for someone else</span>
+                  </label>
+                </div>
+
+                {guestForm.bookingForOther && (
+                  <div className="be-field" style={{ marginBottom: 18 }}>
+                    <label htmlFor="gf-other">Guest Full Name *</label>
+                    <input
+                      id="gf-other"
+                      type="text"
+                      placeholder="Full legal name of the staying guest"
+                      value={guestForm.otherGuestName}
+                      onChange={e => setGuest("otherGuestName", e.target.value)}
+                    />
+                  </div>
                 )}
-              </button>
-              <p className="be-pay-note">Your card will be charged in {currency}. You will receive a confirmation by email.</p>
-              </form>
+
+                <div className="be-form-grid be-form-grid--2">
+                  <div className={`be-field be-field--phone${guestErrors.phone ? " be-field-error" : ""}`}>
+                    <label htmlFor="gf-ph">Contact no *</label>
+                    <div className="be-phone-group">
+                      <select
+                        className="be-phone-prefix"
+                        value={guestForm.countryCode}
+                        onChange={e => setGuest("countryCode", e.target.value)}
+                        aria-label="Country Dialing Code"
+                      >
+                        {COUNTRY_DIAL_CODES.map(c => (
+                          <option key={c.code + c.country} value={c.code}>
+                            {c.flag} {c.code}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        id="gf-ph"
+                        type="tel"
+                        placeholder="e.g. 021 123 4567"
+                        value={guestForm.phone}
+                        onChange={e => setGuest("phone", e.target.value)}
+                        autoComplete="tel"
+                        required
+                      />
+                    </div>
+                    {guestErrors.phone && <span className="be-field-msg">{guestErrors.phone}</span>}
+                  </div>
+
+                  <div className={`be-field${guestErrors.email ? " be-field-error" : ""}`}>
+                    <label htmlFor="gf-em">Email *</label>
+                    <div className="be-input-with-icon">
+                      <input
+                        id="gf-em"
+                        type="email"
+                        placeholder="example@email.com"
+                        value={guestForm.email}
+                        onChange={e => setGuest("email", e.target.value)}
+                        autoComplete="email"
+                        required
+                      />
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#768E87" strokeWidth="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </div>
+                    {guestErrors.email && <span className="be-field-msg">{guestErrors.email}</span>}
+                  </div>
+                </div>
+
+                {/* Promo Code Toggle */}
+                <div className="be-promo-wrap">
+                  {!guestForm.promoOpen ? (
+                    <button
+                      type="button"
+                      className="be-promo-toggle"
+                      onClick={() => setGuest("promoOpen", true)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg>
+                      <span>Do you have a promo code or corporate rate? <strong>Click here</strong></span>
+                    </button>
+                  ) : (
+                    <div className="be-promo-input-row">
+                      <input
+                        type="text"
+                        placeholder="Enter promotional or corporate code"
+                        value={guestForm.promoCode}
+                        onChange={e => setGuest("promoCode", e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-primary be-promo-btn"
+                        onClick={() => alert("Promo code applied!")}
+                      >
+                        Apply Code
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* SECTION 3: PAYMENT DETAILS */}
+              <div className="be-checkout-card">
+                <div className="be-card-section-head">
+                  <span className="be-step-badge">3</span>
+                  <div style={{ flex: 1 }}>
+                    <div className="be-card-head-flex">
+                      <div>
+                        <h3>Payment Details</h3>
+                        <p>256-bit SSL encrypted secure credit card guarantee</p>
+                      </div>
+                      <div className="be-card-badges">
+                        <span className="be-card-badge-pill">Visa</span>
+                        <span className="be-card-badge-pill">Mastercard</span>
+                        <span className="be-card-badge-pill">EFTPOS</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="be-guarantee-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pine)" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
+                  <span>Your credit card will not be charged. It is securely processed and only used to guarantee your booking.</span>
+                </div>
+
+                <div className="be-form-grid">
+                  <div className={`be-field${ccErrors.nameOnCard ? " be-field-error" : ""}`}>
+                    <label htmlFor="cc-name">Name On Card *</label>
+                    <input
+                      id="cc-name"
+                      type="text"
+                      placeholder="Name on card"
+                      value={ccForm.nameOnCard}
+                      onChange={e => setCc("nameOnCard", e.target.value)}
+                      autoComplete="cc-name"
+                      required
+                    />
+                    {ccErrors.nameOnCard && <span className="be-field-msg">{ccErrors.nameOnCard}</span>}
+                  </div>
+                </div>
+
+                <div className="be-form-grid">
+                  <div className={`be-field${ccErrors.cardNumber ? " be-field-error" : ""}`}>
+                    <label htmlFor="cc-num">Card Number *</label>
+                    <div className="be-input-with-icon">
+                      <input
+                        id="cc-num"
+                        type="text"
+                        inputMode="numeric"
+                        placeholder="XXXX XXXX XXXX XXXX"
+                        value={ccForm.cardNumber}
+                        onChange={e => {
+                          const v = e.target.value.replace(/[^\d]/g, "").slice(0, 16);
+                          const formatted = v.replace(/(\d{4})(?=\d)/g, "$1 ");
+                          setCc("cardNumber", formatted);
+                        }}
+                        autoComplete="cc-number"
+                        required
+                      />
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#768E87" strokeWidth="1.8"><rect x="1" y="4" width="22" height="16" rx="2" /><line x1="1" y1="10" x2="23" y2="10" /></svg>
+                    </div>
+                    {ccErrors.cardNumber && <span className="be-field-msg">{ccErrors.cardNumber}</span>}
+                  </div>
+                </div>
+
+                <div className="be-form-grid be-form-grid--2">
+                  <div className={`be-field${ccErrors.expiry ? " be-field-error" : ""}`}>
+                    <label htmlFor="cc-exp">Expiry (MM / YY) *</label>
+                    <input
+                      id="cc-exp"
+                      type="text"
+                      inputMode="numeric"
+                      placeholder="MM / YY"
+                      maxLength={7}
+                      value={ccForm.expiry}
+                      onChange={e => {
+                        let v = e.target.value.replace(/[^\d]/g, "").slice(0, 4);
+                        if (v.length >= 2) v = v.slice(0, 2) + " / " + v.slice(2);
+                        setCc("expiry", v);
+                      }}
+                      autoComplete="cc-exp"
+                      required
+                    />
+                    {ccErrors.expiry && <span className="be-field-msg">{ccErrors.expiry}</span>}
+                  </div>
+                  <div className={`be-field${ccErrors.cvv ? " be-field-error" : ""}`}>
+                    <label htmlFor="cc-cvv">CVV (***) *</label>
+                    <input
+                      id="cc-cvv"
+                      type="password"
+                      inputMode="numeric"
+                      placeholder="***"
+                      maxLength={4}
+                      value={ccForm.cvv}
+                      onChange={e => setCc("cvv", e.target.value.replace(/[^\d]/g, "").slice(0, 4))}
+                      autoComplete="cc-csc"
+                      required
+                    />
+                    {ccErrors.cvv && <span className="be-field-msg">{ccErrors.cvv}</span>}
+                  </div>
+                </div>
+
+                {bookingError && (
+                  <div className="be-error">
+                    <p>{bookingError}</p>
+                  </div>
+                )}
+
+                {/* Terms and Newsletter */}
+                <div className="be-terms-wrap">
+                  <label className="be-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={guestForm.termsAgreed}
+                      onChange={e => setGuest("termsAgreed", e.target.checked)}
+                      required
+                    />
+                    <span>
+                      By booking, you have agreed to our <a href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions</a> | <a href="/privacy" target="_blank" rel="noopener noreferrer">Payment Terms</a>
+                    </span>
+                  </label>
+                  <label className="be-checkbox-label" style={{ marginTop: 10 }}>
+                    <input
+                      type="checkbox"
+                      checked={guestForm.newsletter}
+                      onChange={e => setGuest("newsletter", e.target.checked)}
+                    />
+                    <span>Subscribe to Brookside Motel Newsletter</span>
+                  </label>
+                </div>
+
+                {/* Submit button */}
+                <div className="be-submit-wrap">
+                  <button
+                    type="submit"
+                    className="btn btn-gold be-submit-btn"
+                    disabled={bookingLoading || !guestForm.termsAgreed}
+                  >
+                    {bookingLoading ? (
+                      <><span className="be-spinner be-spinner--small" /> Processing Booking&hellip;</>
+                    ) : (
+                      `Confirm Booking (${formatCurrency(displayTotal, currency)})`
+                    )}
+                  </button>
+                  <p className="be-pay-note">🔒 Guaranteed direct rate in {currency}. Your reservation will be confirmed instantly.</p>
+                </div>
+              </div>
             </div>
+
             <SummarySidebar />
-          </div>
+          </form>
         </div>
       )}
 
