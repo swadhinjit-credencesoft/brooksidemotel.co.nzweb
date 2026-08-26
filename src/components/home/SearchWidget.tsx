@@ -12,9 +12,8 @@ function isoDate(d: Date): string {
 
 function defaultDates(): { checkIn: string; checkOut: string } {
   const inD = new Date();
-  inD.setDate(inD.getDate() + 7);
   const outD = new Date(inD);
-  outD.setDate(outD.getDate() + 2);
+  outD.setDate(outD.getDate() + 1);
   return { checkIn: isoDate(inD), checkOut: isoDate(outD) };
 }
 
