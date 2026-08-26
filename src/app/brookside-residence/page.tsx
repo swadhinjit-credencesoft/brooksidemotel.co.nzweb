@@ -20,7 +20,7 @@ export default function ResidencePage() {
   return (
     <>
       <PageHero
-        src="/images/residence-hero.jpg"
+        src="/images/residenceimage/residence4.png"
         alt="The Brookside Residence exterior and spa"
         placeholderLabel="Residence exterior / spa / living"
         placeholderSub="Landscape · 21:9 slider"

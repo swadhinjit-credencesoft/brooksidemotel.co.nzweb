@@ -45,7 +45,7 @@ export default function ResidenceBedrooms() {
           </div>
           <div className="split-media">
             <figure className="arch" style={{ margin: 0 }}>
-              <SlotImage src="/images/residence-bedroom.jpg" alt="Master suite at Brookside Residence" label="Bedroom gallery" sub="Landscape · 11:10" />
+              <SlotImage src="/images/residenceimage/residence7.png" alt="Master suite at Brookside Residence" label="Bedroom gallery" sub="Landscape · 11:10" />
             </figure>
           </div>
         </div>

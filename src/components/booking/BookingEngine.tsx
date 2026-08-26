@@ -25,8 +25,8 @@ import {
 /* ------------------------------------------------------------------ */
 
 function defaultDates() {
-  const ci = addDays(todayISO(), 7);
-  return { checkIn: ci, checkOut: addDays(ci, 2) };
+  const ci = todayISO();
+  return { checkIn: ci, checkOut: addDays(ci, 1) };
 }
 
 function roomImage(rid: string): { src: string; alt: string } {

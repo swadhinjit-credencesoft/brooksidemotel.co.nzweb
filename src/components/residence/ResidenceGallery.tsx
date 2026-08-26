@@ -9,6 +9,7 @@ const IMAGES = [
   { src: "/images/residenceimage/residence4.png", alt: "Brookside Residence kitchen and dining" },
   { src: "/images/residenceimage/residence5.png", alt: "Brookside Residence outdoor spa and BBQ" },
   { src: "/images/residenceimage/residence6.png", alt: "Brookside Residence full view" },
+  { src: "/images/residenceimage/residencefullview.png", alt: "Brookside Residence full view" },
 ];
 
 export default function ResidenceGallery() {
