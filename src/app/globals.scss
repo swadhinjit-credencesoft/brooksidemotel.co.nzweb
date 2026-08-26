@@ -367,6 +367,7 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
 }
 @media (max-width:860px){
   :root{--s7:64px;--s8:78px;}
+  .search{display:none;}
   .nav{display:none;}
   .burger{display:flex;}
   .rooms,.amen,.perks{grid-template-columns:1fr;}
@@ -404,7 +405,8 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
   .hero-sub{font-size:14px;}
   .hero-actions{flex-direction:column;width:100%;}
   .hero-actions .btn{width:100%;text-align:center;padding:14px 20px;}
-  .nav-panel{padding:72px var(--s3) var(--s3);}
+  .nav-panel{padding:var(--s3) var(--s3) var(--s5);}
+  .nav-panel-logo{height:38px;}
   .nav-panel a{font-size:13px;padding:12px 0;}
 }
 
@@ -774,18 +776,31 @@ table.facts td:first-child{font-weight:600;color:var(--pine);}
 
 /* Mobile nav panel (the mockup burger had no behaviour) */
 .nav-panel{
-  display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:80;
-  background:var(--deep-pine);padding:120px var(--s4) var(--s4);
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99;
+  background:var(--deep-pine);padding:var(--s4) var(--s4) var(--s6);
   overflow-y:auto;
 }
 .nav-panel.open{display:block;}
+.nav-panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:var(--s3);margin-bottom:var(--s2);
+  border-bottom:1px solid rgba(192,211,205,.18);
+}
+.nav-panel-logo{height:44px;width:auto;display:block;}
+.nav-panel-close{
+  background:none;border:none;color:var(--alpine-cream);
+  padding:8px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;border-radius:4px;
+  transition:background .2s,color .2s;
+}
+.nav-panel-close:hover{background:rgba(255,255,255,.1);color:#fff;}
 .nav-panel ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;}
 .nav-panel a{
   display:block;padding:14px 0;border-bottom:1px solid rgba(192,211,205,.14);
   font-size:14px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
   color:var(--alpine-cream);
 }
-.nav-panel .btn{margin-top:var(--s3);}
+.nav-panel .btn{margin-top:var(--s3);text-align:center;}
 
 /* Hero still frame sits under the video as fallback. */
 

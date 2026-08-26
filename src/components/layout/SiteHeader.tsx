@@ -60,10 +60,27 @@ export default function SiteHeader() {
         </div>
       </div>
       <div className={`nav-panel${open ? " open" : ""}`}>
+        <div className="nav-panel-head">
+          <Link href="/" onClick={() => setOpen(false)} aria-label="Brookside Motel — home">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="nav-panel-logo" src="/logos/logo-cream.png" alt="Brookside Motel" width={200} height={40} />
+          </Link>
+          <button
+            type="button"
+            className="nav-panel-close"
+            aria-label="Close menu"
+            onClick={() => setOpen(false)}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
         <ul>
           {HEADER_LINKS.map((item) => (
             <li key={item.href}>
-              <Link href={item.href}>{item.label}</Link>
+              <Link href={item.href} onClick={() => setOpen(false)}>{item.label}</Link>
             </li>
           ))}
           <li>
