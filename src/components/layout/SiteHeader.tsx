@@ -46,7 +46,7 @@ export default function SiteHeader() {
           })}
         </nav>
         <div className="header-cta" style={{ display: "flex", alignItems: "center", gap: "var(--s2)" }}>
-          {/* <BookingButton className="btn btn-gold">Book direct</BookingButton> */}
+          <BookingButton className="btn btn-gold">Book direct</BookingButton>
           <button
             className={`burger${open ? " open" : ""}`}
             aria-label={open ? "Close menu" : "Open menu"}
