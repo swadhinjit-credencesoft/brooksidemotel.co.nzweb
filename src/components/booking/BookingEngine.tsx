@@ -640,7 +640,7 @@ export default function BookingEngine() {
       <div className="be-brand">
         <a href="/" className="be-brand-link">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="be-brand-logo" src="/logos/logo-pine.png" alt="Brookside Motel" width={240} height={56} />
+          <img className="be-brand-logo" src="/logos/logo-pine.png" alt="Brookside Motel" width={340} height={80} />
           <span className="be-brand-sub">Boutique Accommodation · Rolleston, Canterbury</span>
         </a>
         <div className="be-brand-right">

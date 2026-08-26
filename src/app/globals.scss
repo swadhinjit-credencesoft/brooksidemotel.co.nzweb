@@ -112,7 +112,8 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
 .site-header{position:absolute;top:40px;left:0;right:0;z-index:60;
   transition:background .35s var(--ease),box-shadow .35s var(--ease),top .35s var(--ease);}
 .site-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);height:92px;}
-.brand-logo{height:56px;width:auto;transition:height .35s var(--ease);}
+.brand-logo{width:auto;object-fit:contain;transition:height .35s var(--ease);}
+.logo-cream{height:56px;max-height:56px;}
 .logo-pine{display:none;}
 
 .nav{display:flex;align-items:center;gap:26px;}
@@ -125,10 +126,9 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
 
 .site-header.stuck{position:fixed;top:0;background:var(--alpine-cream);
   box-shadow:0 1px 0 var(--mist-sage),0 10px 34px rgba(31,45,41,.09);}
-.site-header.stuck .wrap{height:78px;}
-.site-header.stuck .brand-logo{height:54px;}
+.site-header.stuck .wrap{height:106px;}
 .site-header.stuck .logo-cream{display:none;}
-.site-header.stuck .logo-pine{display:block;}
+.site-header.stuck .logo-pine{display:block;height:92px;max-height:92px;max-width:380px;}
 .site-header.stuck .nav a{color:var(--pine);}
 .site-header.stuck .nav a::after{border-color:var(--deep-gold);}
 
@@ -390,8 +390,8 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
   .hero-sub{font-size:16px;line-height:1.6;margin-bottom:var(--s4);}
   .hero-actions{gap:var(--s2);}
   .hero-actions .btn{padding:13px 22px;font-size:12px;}
-  .brand-logo{height:48px;}
-  .site-header.stuck .brand-logo{height:46px;}
+  .logo-cream{height:48px;max-height:48px;}
+  .site-header.stuck .logo-pine{height:76px;max-height:76px;}
   .journey{padding:var(--s6) 0 var(--s7);}
   .jcard{min-height:360px;}
   .drive .d-time{min-width:88px;font-size:26px;}
@@ -429,8 +429,9 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
   .drive .d-time{font-size:22px;min-width:75px;}
   .drive .d-place b{font-size:14.5px;}
   .site-header .wrap{height:68px;}
-  .brand-logo{height:42px;}
-  .site-header.stuck .brand-logo{height:40px;}
+  .logo-cream{height:42px;max-height:42px;}
+  .site-header.stuck .wrap{height:84px;}
+  .site-header.stuck .logo-pine{height:68px;max-height:68px;}
   .header-cta .btn{padding:10px 14px;font-size:10px;letter-spacing:.06em;}
   .hero{padding-top:125px;min-height:85svh;padding-bottom:var(--s5);}
   .hero h1{font-size:clamp(24px,7vw,32px);line-height:1.2;}
@@ -1010,7 +1011,7 @@ input[type="date"]::-webkit-calendar-picker-indicator{opacity:.55;cursor:pointer
   gap:6px;text-decoration:none;
 }
 .be-brand-logo{
-  height:56px;max-height:56px;width:auto;max-width:260px;
+  height:76px;max-height:76px;width:auto;max-width:320px;
   object-fit:contain;display:block;
 }
 .be-brand-sub{font:500 12.5px/1 var(--sans);color:var(--sage-text);letter-spacing:.02em;}

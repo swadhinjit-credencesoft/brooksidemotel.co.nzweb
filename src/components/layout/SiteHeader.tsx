@@ -27,9 +27,9 @@ export default function SiteHeader() {
       <div className="wrap">
         <Link href="/" aria-label="Brookside Motel — home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="brand-logo logo-cream" src="/logos/logo-cream.png" alt="Brookside Motel" width={232} height={46} />
+          <img className="brand-logo logo-cream" src="/logos/logo-cream.png" alt="Brookside Motel" width={350} height={80} />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="brand-logo logo-pine" src="/logos/logo-pine.png" alt="Brookside Motel" width={232} height={46} />
+          <img className="brand-logo logo-pine" src="/logos/logo-pine.png" alt="Brookside Motel" width={350} height={80} />
         </Link>
         <nav className="nav" aria-label="Primary">
           {HEADER_LINKS.map((item) => {
