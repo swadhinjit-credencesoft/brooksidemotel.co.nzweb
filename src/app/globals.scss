@@ -995,9 +995,15 @@ input[type="date"]::-webkit-calendar-picker-indicator{opacity:.55;cursor:pointer
   border-bottom:1px solid rgba(58,78,72,.1);
   margin-bottom:32px;flex-wrap:wrap;gap:16px;
 }
-.be-brand-link{display:flex;flex-direction:column;gap:6px;text-decoration:none;}
-.be-brand-logo{height:46px;width:auto;display:block;}
-.be-brand-sub{font:500 12px/1 var(--sans);color:var(--sage-text);letter-spacing:.02em;}
+.be-brand-link{
+  display:inline-flex;flex-direction:column;align-items:flex-start;
+  gap:6px;text-decoration:none;
+}
+.be-brand-logo{
+  height:56px;max-height:56px;width:auto;max-width:260px;
+  object-fit:contain;display:block;
+}
+.be-brand-sub{font:500 12.5px/1 var(--sans);color:var(--sage-text);letter-spacing:.02em;}
 .be-brand-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .be-brand-badge{
   display:inline-flex;align-items:center;gap:6px;
