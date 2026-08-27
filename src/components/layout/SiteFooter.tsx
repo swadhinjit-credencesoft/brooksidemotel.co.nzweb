@@ -5,6 +5,7 @@ import {
   PHONE_DISPLAY,
   PHONE_TEL,
   EMAIL_STAY,
+  MAPS_URL,
 } from "@/lib/site";
 
 export default function SiteFooter() {
@@ -92,9 +93,15 @@ export default function SiteFooter() {
               <h6>Direct contact</h6>
               <ul>
                 <li>
-                  {ADDRESS_LINES[0]}
-                  <br />
-                  {ADDRESS_LINES[1]}
+                  <a
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {ADDRESS_LINES[0]}
+                    <br />
+                    {ADDRESS_LINES[1]}
+                  </a>
                 </li>
                 <li style={{ marginTop: 14 }}>
                   <a href={PHONE_TEL}>{PHONE_DISPLAY}</a>

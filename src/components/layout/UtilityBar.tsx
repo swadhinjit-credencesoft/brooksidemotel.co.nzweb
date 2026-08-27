@@ -1,11 +1,16 @@
-import { PHONE_DISPLAY, PHONE_TEL, EMAIL_RESERVATIONS, STREET } from "@/lib/site";
+import { PHONE_DISPLAY, PHONE_TEL, EMAIL_RESERVATIONS, STREET, MAPS_URL } from "@/lib/site";
 
 export default function UtilityBar() {
   return (
     <div className="utility">
       <div className="wrap">
         <div className="u-group">
-          <span>
+          <a
+            href={MAPS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View Brookside Motel on Google Maps"
+          >
             <svg
               width="13"
               height="13"
@@ -19,7 +24,7 @@ export default function UtilityBar() {
               <circle cx="12" cy="10" r="3" />
             </svg>
             {STREET}
-          </span>
+          </a>
         </div>
         <div className="u-group">
           <a href={PHONE_TEL}>

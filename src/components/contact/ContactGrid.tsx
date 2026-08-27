@@ -1,4 +1,4 @@
-import { PHONE_TEL, EMAIL_STAY } from "@/lib/site";
+import { PHONE_TEL, EMAIL_STAY, MAPS_URL } from "@/lib/site";
 
 export default function ContactGrid() {
   return (
@@ -18,7 +18,14 @@ export default function ContactGrid() {
                 </span>
                 <div>
                   <span className="c-l">Physical address</span>
-                  <span className="c-v">12 Brookside Road, Rolleston 7614, Canterbury</span>
+                  <a
+                    className="c-v"
+                    href={MAPS_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    12 Brookside Road, Rolleston 7614, Canterbury
+                  </a>
                 </div>
               </li>
               <li>

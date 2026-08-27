@@ -8,6 +8,8 @@ export const EMAIL_RESERVATIONS = "reservations@brooksidemotel.co.nz";
 export const EMAIL_STAY = "reservations@brooksidemotel.co.nz";
 export const STREET = "12 Brookside Road, Rolleston 7614, Canterbury";
 export const ADDRESS_LINES = ["12 Brookside Rd, Rolleston", "Canterbury 7614, New Zealand"];
+export const MAPS_URL =
+  "https://www.google.com/maps?vet=10CAAQoqAOahcKEwjQotSSssCWAxUAAAAAHQAAAAAQBg..i&sca_esv=a4ac375be92b09b0&mstk=AUtExfA4HfyDF6L8E1XF12XpSjVvmYWCDtOKUvOlbgPbHal8qaHdktAHK57OWZ59WN29sXGQ2gv7mEndGBItGZfWQrhEVKDRrFRkP6qJN2vsTW8hX8r2oIezDS6FT1RARP-nqzMh8HkZmzerIfWP7LGy6tKTX50xw2mk6WTCcbta5wNE4xYPc7Bp7qQexqPbm7LukM4c&pvq=Cg0vZy8xMXh6NF96ajNiEhoQARoHCOoPEAkYBigBMAI4CpABAaABAKgBAYABAZABAQ&fvr=1&cs=0&um=1&ie=UTF-8&fb=1&gl=in&sa=X&ftid=0x6d3203007b582e1b:0x78adb1054c7e9e22";
 
 export const BOOKING_URL =
   "https://www.swiftbook.io/inst/#home?propertyId=223NTUD2eB2ox9GXf4NTU=&JDRN=Y";
