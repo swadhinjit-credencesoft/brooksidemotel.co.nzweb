@@ -67,17 +67,17 @@ export default function FeaturedRoomsSection() {
         <div className="rooms">
           <article className="room rv">
             <div className="room-media">
-              <SlotImage src="/images/room-super-king.jpg" alt="Superior Super King Suite" label="Super King Suite" sub="Landscape · 3:2" />
+              <SlotImage src="/images/superior-outdoor-area.jpg" alt="Superior Room – Outdoor Area" label="Superior · outdoor area" sub="Landscape · 3:2" />
               <span className="room-flag">Best seller</span>
             </div>
             <div className="room-body">
               <h4 className="h3">
-                <Link href="/motel-rooms/superior-outdoor">Superior Super King Suite</Link>
+                <Link href="/motel-rooms/superior-outdoor">Superior Room – Outdoor Area</Link>
               </h4>
               <ul className="room-specs">
                 <li>{SpecGuests}2 guests</li>
-                <li>{SpecBed}Super King bed</li>
-                <li>{SpecBuilding}Outdoor seating / courtyard</li>
+                <li>{SpecBed}1 Super King bed</li>
+                <li>{SpecBuilding}Private outdoor courtyard</li>
                 <li>{SpecCheck}Luxury linen</li>
               </ul>
               <div className="room-cta">
@@ -97,12 +97,12 @@ export default function FeaturedRoomsSection() {
             </div>
             <div className="room-body">
               <h4 className="h3">
-                <Link href="/motel-rooms/deluxe-two-doubles">Deluxe Family / Twin Room</Link>
+                <Link href="/motel-rooms/deluxe-two-doubles">Deluxe Room – 2 Double Beds</Link>
               </h4>
               <ul className="room-specs">
                 <li>{SpecGuests}2–4 guests</li>
                 <li>{SpecBed}2 double beds</li>
-                <li>{SpecBuilding}Ground floor</li>
+                <li>{SpecBuilding}Full ground-floor access</li>
                 <li>{SpecTv}Smart TV &amp; fibre Wi-Fi</li>
               </ul>
               <div className="room-cta">
@@ -118,7 +118,7 @@ export default function FeaturedRoomsSection() {
 
           <article className="room rv">
             <div className="room-media">
-              <SlotImage src="/images/room-residence.jpg" alt="The Brookside Residence" label="The Residence" sub="Landscape · 3:2" />
+              <SlotImage src="/images/residenceimage/residence4.png" alt="The Brookside Residence" label="The Residence" sub="Landscape · 3:2" />
               <span className="room-flag">4-bedroom home</span>
             </div>
             <div className="room-body">
