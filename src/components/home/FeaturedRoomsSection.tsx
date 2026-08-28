@@ -59,7 +59,7 @@ export default function FeaturedRoomsSection() {
             <p className="eyebrow">Where you&apos;ll stay</p>
             <h2 className="h1">Featured room types</h2>
           </div>
-          <Link className="link-brook" href="/motel-rooms">
+          <Link className="link-brook" href="/motel-rooms#showcase">
             See all rooms &amp; rates <ArrowIcon />
           </Link>
         </div>
