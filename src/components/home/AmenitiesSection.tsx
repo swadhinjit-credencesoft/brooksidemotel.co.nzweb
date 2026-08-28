@@ -64,7 +64,7 @@ export default function AmenitiesSection() {
             <div key={amen.title} className="amen-item">
               <div className="amen-ico">{getAmenityIcon(amen.icon)}</div>
               <div>
-                <h5>{amen.title}</h5>
+                <h3>{amen.title}</h3>
                 <p>{amen.desc}</p>
               </div>
             </div>

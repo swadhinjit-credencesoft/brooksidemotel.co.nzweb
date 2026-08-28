@@ -68,6 +68,8 @@ export interface GalleryImage {
 export interface FaqItem {
   q: string;
   a: ReactNode;
+  /** Plain text version of the answer, used for JSON-LD structured data */
+  aText: string;
   open?: boolean;
 }
 

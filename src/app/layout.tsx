@@ -5,7 +5,10 @@ import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Brookside Motel — Brand-New Luxury & Modern Comfort in Rolleston",
+  title: {
+    default: "Brookside Motel Rolleston | New Motel Accommodation, Canterbury NZ",
+    template: "%s | Brookside Motel, Rolleston",
+  },
   description:
     "Brand-new luxury motel accommodation and private residences in Rolleston, Canterbury.",
   icons: {
@@ -13,7 +16,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Brookside Motel — Brand-New Luxury & Modern Comfort in Rolleston",
+    title: "Brookside Motel Rolleston | New Motel Accommodation, Canterbury NZ",
     description:
       "Brand-new luxury motel accommodation and private residences in Rolleston, Canterbury.",
     url: SITE_URL,
@@ -31,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brookside Motel",
+    title: "Brookside Motel Rolleston | New Motel Accommodation, Canterbury NZ",
     description:
       "Brand-new luxury motel accommodation and private residences in Rolleston, Canterbury.",
     images: ["/opengraph-image.png"],
@@ -44,7 +47,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en-NZ">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

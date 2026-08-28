@@ -71,9 +71,9 @@ export default function FeaturedRoomsSection() {
               <span className="room-flag">Best seller</span>
             </div>
             <div className="room-body">
-              <h4 className="h3">
+              <h3 className="h3">
                 <Link href="/motel-rooms/superior-outdoor">Superior Room – Outdoor Area</Link>
-              </h4>
+              </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}2 guests</li>
                 <li>{SpecBed}1 Super King bed</li>
@@ -96,9 +96,9 @@ export default function FeaturedRoomsSection() {
               <SlotImage src="/images/room-family-twin.jpg" alt="Deluxe Family / Twin Room" label="Family / Twin" sub="Landscape · 3:2" />
             </div>
             <div className="room-body">
-              <h4 className="h3">
+              <h3 className="h3">
                 <Link href="/motel-rooms/deluxe-two-doubles">Deluxe Room – 2 Double Beds</Link>
-              </h4>
+              </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}2–4 guests</li>
                 <li>{SpecBed}2 double beds</li>
@@ -122,9 +122,9 @@ export default function FeaturedRoomsSection() {
               <span className="room-flag">4-bedroom home</span>
             </div>
             <div className="room-body">
-              <h4 className="h3">
+              <h3 className="h3">
                 <Link href="/brookside-residence">The Brookside Residence</Link>
-              </h4>
+              </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}8 adults</li>
                 <li>{SpecBed}4 bedrooms (2 Super Kings + 2 Doubles)</li>

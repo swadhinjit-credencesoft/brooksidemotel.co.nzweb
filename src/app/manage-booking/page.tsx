@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: "Manage Your Booking — Brookside Motel",
   description:
     "View, modify, or cancel your reservation at Brookside Motel, Rolleston.",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function ManageBookingPage() {

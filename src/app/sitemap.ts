@@ -13,7 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     { url: `${SITE_URL}/book`, changeFrequency: "monthly" as const, priority: 0.6 },
     { url: `${SITE_URL}/book-residence`, changeFrequency: "monthly" as const, priority: 0.7 },
-    { url: `${SITE_URL}/manage-booking`, changeFrequency: "monthly" as const, priority: 0.5 },
     ...ROOMS.map((room) => ({
       url: `${SITE_URL}/motel-rooms/${room.id}`,
       changeFrequency: "monthly" as const,

@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   title: "Blog & Local Guide \u2014 Brookside Motel, Rolleston",
   description:
     "Where to eat in Rolleston, why it is the smart base for corporate travellers, and how to plan a stress-free Christchurch Airport stopover.",
+  openGraph: {
+    title: "Blog & Local Guide \u2014 Brookside Motel, Rolleston",
+    description:
+      "Where to eat in Rolleston, why it is the smart base for corporate travellers, and how to plan a stress-free Christchurch Airport stopover.",
+    url: "/local-guide",
+  },
 };
 
 export default function LocalGuidePage() {

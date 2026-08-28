@@ -6,6 +6,16 @@ export const metadata: Metadata = {
   title: "Book Direct — Brookside Motel, Rolleston",
   description:
     "Check availability and book your stay at Brookside Motel, Rolleston. Secure online booking with best-rate guarantee and flexible cancellation.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+  openGraph: {
+    title: "Book Direct — Brookside Motel, Rolleston",
+    description:
+      "Check availability and book your stay at Brookside Motel, Rolleston. Secure online booking with best-rate guarantee and flexible cancellation.",
+    url: "/book",
+  },
 };
 
 export default function BookPage() {

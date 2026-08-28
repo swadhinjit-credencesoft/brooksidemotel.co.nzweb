@@ -67,7 +67,7 @@ export default function SiteFooter() {
               </div> */}
             </div>
             <div>
-              <h6>Quick links</h6>
+              <p className="footer-heading">Quick links</p>
               <ul>
                 <li>
                   <Link href="/motel-rooms">Rooms</Link>
@@ -90,7 +90,7 @@ export default function SiteFooter() {
               </ul>
             </div>
             <div>
-              <h6>Direct contact</h6>
+              <p className="footer-heading">Direct contact</p>
               <ul>
                 <li>
                   <a
@@ -112,7 +112,7 @@ export default function SiteFooter() {
               </ul>
             </div>
             <div>
-              <h6>Book direct</h6>
+              <p className="footer-heading">Book direct</p>
               <div className="staah-badge">
                 <div className="bk-ico">
                   <svg
