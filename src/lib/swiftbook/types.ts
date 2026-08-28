@@ -12,20 +12,28 @@
  *   5. PropertyJson — static property config
  */
 
-/* =================================================================
-   CONSTANTS
-   ================================================================= */
+import {
+  CSBE_BASE,
+  TRACKER_BASE,
+  PROPERTY_JSON_BASE,
+  CSBE_API_KEY,
+  CC_ENCRYPT_KEY,
+  CC_ENCRYPT_IV,
+  MOTEL_PROPERTY,
+} from "./config";
 
-export const PROPERTY_ID_B64 =
-  process.env.NEXT_PUBLIC_STAAH_PROPERTY_ID ?? "223NTUD2eB2ox9GXf4NTU=";
-export const PROPERTY_ID_DEC =
-  process.env.NEXT_PUBLIC_STAAH_PROPERTY_ID_DEC ?? "55855";
-export const CSBE_API_KEY =
-  process.env.NEXT_PUBLIC_STAAH_API_KEY ?? "cPPq1uh0xD6BpfDFpGWEx9fxnDOUA3Y25RdigC0X";
+export {
+  CSBE_BASE,
+  TRACKER_BASE,
+  PROPERTY_JSON_BASE,
+  CSBE_API_KEY,
+  CC_ENCRYPT_KEY,
+  CC_ENCRYPT_IV,
+};
 
-export const CSBE_BASE = "https://csbe.staah.net/";
-export const TRACKER_BASE = "https://maxtracker.staah.net/";
-export const PROPERTY_JSON_BASE = "https://www.swiftbook.io/PropertyJson";
+export const PROPERTY_ID_B64 = MOTEL_PROPERTY.idB64;
+export const PROPERTY_ID_DEC = MOTEL_PROPERTY.idDec;
+
 
 /* =================================================================
    1. bedataguest — availability + rooms
@@ -569,17 +577,9 @@ export interface ManageBookingResponse {
 }
 
 /* =================================================================
-   Credit card encryption — AES-256-CBC
-   VERIFIED: Keys hardcoded in SwiftBook widget (encryptCCData function).
-   IV: "Wuwr6ka?2uW7eCEc$29K&1Ia*px0LD?c"
-   Key: "V-a+Jg?pTw4XuJ^&"
-   ================================================================= */
-
-export const CC_ENCRYPT_IV = "Wuwr6ka?2uW7eCEc$29K&1Ia*px0LD?c";
-export const CC_ENCRYPT_KEY = "V-a+Jg?pTw4XuJ^&";
-
 /* =================================================================
    7. berate — calendar inventory (GET)
+
    GET https://csbe.staah.net/?RequestType=berate&PropertyId=...
        &Product=no&FromDate=2026-08-26&ToDate=2026-08-27
        &JDRN=Y&RoomID=225755,225756,225757,225758,225759&ignoreRates=true
