@@ -50,14 +50,11 @@ const COMMON_HEADERS: Record<string, string> = {
 };
 
 function nightsBetween(a: string, b: string): number {
-  return Math.max(
-    0,
-    Math.round(
-      (new Date(`${b}T00:00:00`).getTime() -
-        new Date(`${a}T00:00:00`).getTime()) /
-        86_400_000
-    )
-  );
+  const [yA, mA, dA] = a.split("-").map(Number);
+  const [yB, mB, dB] = b.split("-").map(Number);
+  const msA = Date.UTC(yA, mA - 1, dA);
+  const msB = Date.UTC(yB, mB - 1, dB);
+  return Math.max(0, Math.round((msB - msA) / 86_400_000));
 }
 
 /** Format date as DD-MM-YYYY (SwiftBook tracker format) */
@@ -685,8 +682,13 @@ export function formatCurrency(amount: number, currency: string): string {
   }
 }
 
+/** Format a date string as a long date in NZ timezone */
 export function formatDateLong(d: string): string {
-  return new Date(`${d}T00:00:00`).toLocaleDateString("en-NZ", {
+  // Parse as UTC midnight to avoid timezone shift
+  const [y, m, day] = d.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, day, 0, 0, 0));
+  return date.toLocaleDateString("en-NZ", {
+    timeZone: NZ_TZ,
     weekday: "short",
     day: "numeric",
     month: "short",
@@ -694,13 +696,26 @@ export function formatDateLong(d: string): string {
   });
 }
 
+const NZ_TZ = "Pacific/Auckland";
+
+/** Get today's date in NZ timezone (YYYY-MM-DD) */
 export function todayISO(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: NZ_TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const y = parts.find(p => p.type === "year")?.value ?? String(now.getFullYear());
+  const m = parts.find(p => p.type === "month")?.value ?? "01";
+  const d = parts.find(p => p.type === "day")?.value ?? "01";
+  return `${y}-${m}-${d}`;
 }
 
+/** Add N days to a YYYY-MM-DD date string, returning YYYY-MM-DD in NZ timezone */
 export function addDays(dateISO: string, days: number): string {
-  const d = new Date(`${dateISO}T00:00:00`);
-  d.setDate(d.getDate() + days);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  const [y, m, day] = dateISO.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, day + days, 0, 0, 0));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
 }

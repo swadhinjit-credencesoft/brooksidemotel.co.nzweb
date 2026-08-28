@@ -42,7 +42,7 @@ export interface HeaderLink {
 
 export const HEADER_LINKS: HeaderLink[] = [
   { label: "Motel Rooms", href: "/motel-rooms" },
-  { label: "Executive Residence", href: "/brookside-residence" },
+  { label: "Brookside Residence", href: "/brookside-residence" },
   { label: "Amenities", href: "/amenities" },
   { label: "Local Guide", href: "/local-guide" },
   { label: "FAQ", href: "/faq" },

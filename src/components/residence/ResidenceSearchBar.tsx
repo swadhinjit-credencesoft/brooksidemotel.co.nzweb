@@ -3,18 +3,31 @@
 import { useEffect, useState } from "react";
 import { residenceBookPageUrl } from "@/lib/site";
 
-function isoDate(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
+/** Get today's date in NZ timezone as YYYY-MM-DD */
+function nzTodayISO(): string {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Pacific/Auckland",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const y = parts.find((p) => p.type === "year")?.value ?? String(now.getFullYear());
+  const m = parts.find((p) => p.type === "month")?.value ?? "01";
+  const d = parts.find((p) => p.type === "day")?.value ?? "01";
+  return `${y}-${m}-${d}`;
+}
+
+/** Add N days to a YYYY-MM-DD string using UTC arithmetic */
+function addDaysNZ(dateISO: string, days: number): string {
+  const [y, m, day] = dateISO.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, day + days, 0, 0, 0));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
 }
 
 function defaultDates(): { checkIn: string; checkOut: string } {
-  const inD = new Date();
-  const outD = new Date(inD);
-  outD.setDate(outD.getDate() + 2);
-  return { checkIn: isoDate(inD), checkOut: isoDate(outD) };
+  const ci = nzTodayISO();
+  return { checkIn: ci, checkOut: addDaysNZ(ci, 2) };
 }
 
 export default function ResidenceSearchBar() {
@@ -32,9 +45,7 @@ export default function ResidenceSearchBar() {
   const onCheckin = (v: string) => {
     setCheckin(v);
     if (v && checkout && checkout <= v) {
-      const next = new Date(v);
-      next.setDate(next.getDate() + 2);
-      setCheckout(isoDate(next));
+      setCheckout(addDaysNZ(v, 2));
     }
   };
 
@@ -43,7 +54,7 @@ export default function ResidenceSearchBar() {
 
     let ci = checkin;
     let co = checkout;
-    const today = isoDate(new Date());
+    const today = nzTodayISO();
     if (!ci || !co || ci < today || co <= ci) {
       const fallback = defaultDates();
       ci = fallback.checkIn;
@@ -76,7 +87,7 @@ export default function ResidenceSearchBar() {
                 id="res-sw-checkin"
                 type="date"
                 value={checkin}
-                min={isoDate(new Date())}
+                min={nzTodayISO()}
                 onChange={(e) => onCheckin(e.target.value)}
                 required
               />
@@ -94,7 +105,7 @@ export default function ResidenceSearchBar() {
                 id="res-sw-checkout"
                 type="date"
                 value={checkout}
-                min={checkin || isoDate(new Date())}
+                min={checkin || nzTodayISO()}
                 onChange={(e) => setCheckout(e.target.value)}
                 required
               />

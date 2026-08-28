@@ -33,8 +33,10 @@ function formatDateWithDay(iso: string): string {
   if (!iso) return "";
   const parts = iso.split("-");
   if (parts.length < 3) return iso;
-  const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+  // Parse as UTC midnight to avoid timezone shift
+  const d = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 0, 0, 0));
   return d.toLocaleDateString("en-NZ", {
+    timeZone: "Pacific/Auckland",
     weekday: "short",
     day: "numeric",
     month: "short",
