@@ -1,13 +1,3 @@
-const mapPin = (
-  <span className="map-pin">
-    <span className="pin-label">Brookside Motel · 12 Brookside Rd</span>
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="#3A4E48">
-      <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" />
-      <circle cx="12" cy="9" r="2.6" fill="#EFE6DD" />
-    </svg>
-  </span>
-);
-
 export default function MapDirections() {
   return (
     <section className="section bg-paper" id="map">
@@ -17,44 +7,21 @@ export default function MapDirections() {
           <h2 className="h1">Interactive map &amp; driving directions</h2>
         </div>
         <div className="rv">
-          <a
+          <div
             className="map-frame"
-            href="https://www.google.com/maps/search/?api=1&query=Brookside+Motel%2C+12+Brookside+Road%2C+Rolleston%2C+Canterbury"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ aspectRatio: "16/7", display: "block" }}
-            aria-label="Open Brookside Motel location in Google Maps"
+            style={{ aspectRatio: "16/7", minHeight: "380px" }}
           >
-            <svg className="mapart" viewBox="0 0 1200 525" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-              <rect width="1200" height="525" fill="#E1ECE9" />
-              <g stroke="#C0D3CD" strokeWidth="14" fill="none">
-                <path d="M-20 330 H1220" />
-                <path d="M600 -20 V545" />
-              </g>
-              <g stroke="#CBDAD5" strokeWidth="5" fill="none">
-                <path d="M-20 140 H1220" />
-                <path d="M-20 240 H1220" />
-                <path d="M-20 440 H1220" />
-                <path d="M220 -20 V545" />
-                <path d="M420 -20 V545" />
-                <path d="M820 -20 V545" />
-                <path d="M1000 -20 V545" />
-              </g>
-              <path d="M-20 70 C 180 110, 380 40, 560 100 S 900 170, 1220 120" stroke="#6E97A6" strokeWidth="8" fill="none" opacity=".5" />
-              <g fill="#D6E3DE">
-                <rect x="250" y="170" width="130" height="130" rx="7" />
-                <rect x="640" y="160" width="110" height="100" rx="7" />
-                <rect x="240" y="380" width="150" height="80" rx="7" />
-                <rect x="860" y="370" width="120" height="90" rx="7" />
-                <rect x="1020" y="180" width="120" height="110" rx="7" />
-              </g>
-              <text x="612" y="60" fontFamily="Poppins,sans-serif" fontSize="15" fill="#6E8C84" letterSpacing="2">
-                SH1 · SOUTHERN MOTORWAY
-              </text>
-            </svg>
-            {mapPin}
-            <span className="map-note">Click to open in Google Maps</span>
-          </a>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d180.60307266411306!2d172.37580335853272!3d-43.59302352348233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d3203007b582e1b%3A0x78adb1054c7e9e22!2sBrookside%20Motel!5e0!3m2!1sen!2sbd!4v1787894046074!5m2!1sen!2sbd"
+              width="600"
+              height="450"
+              style={{ border: 0, width: "100%", height: "100%", display: "block" }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Brookside Motel Google Maps Location"
+            />
+          </div>
 
           <div className="directions">
             <b>Arriving via Southern Motorway (SH1)</b>
@@ -69,3 +36,4 @@ export default function MapDirections() {
     </section>
   );
 }
+

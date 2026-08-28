@@ -7,45 +7,18 @@ export default function LocationSection() {
       <div className="wrap">
         <div className="loc-grid">
           <div className="rv">
-            <a
-              className="map-frame"
-              href="https://www.google.com/maps/search/?api=1&query=Brookside+Motel%2C+12+Brookside+Road%2C+Rolleston%2C+Canterbury"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ display: "block" }}
-              aria-label="Open Brookside Motel location in Google Maps"
-            >
-              <svg className="mapart" viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-                <rect width="600" height="480" fill="#E1ECE9" />
-                <g stroke="#C0D3CD" strokeWidth="10" fill="none">
-                  <path d="M-20 340 H620" />
-                  <path d="M300 -20 V500" />
-                </g>
-                <g stroke="#CBDAD5" strokeWidth="4" fill="none">
-                  <path d="M-20 150 H620" />
-                  <path d="M-20 250 H620" />
-                  <path d="M-20 430 H620" />
-                  <path d="M120 -20 V500" />
-                  <path d="M450 -20 V500" />
-                  <path d="M540 -20 V500" />
-                </g>
-                <path d="M-20 60 C 120 90, 260 40, 380 96 S 560 150, 640 120" stroke="#6E97A6" strokeWidth="7" fill="none" opacity=".55" />
-                <g fill="#D6E3DE">
-                  <rect x="150" y="180" width="110" height="120" rx="6" />
-                  <rect x="350" y="180" width="80" height="90" rx="6" />
-                  <rect x="150" y="370" width="130" height="70" rx="6" />
-                  <rect x="360" y="370" width="100" height="70" rx="6" />
-                </g>
-              </svg>
-              <div className="map-pin">
-                <span className="pin-label">Brookside Motel</span>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="#3A4E48" aria-hidden="true">
-                  <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" />
-                  <circle cx="12" cy="9" r="2.6" fill="#EFE6DD" />
-                </svg>
-              </div>
-              <span className="map-note">Click to open in Google Maps</span>
-            </a>
+            <div className="map-frame" style={{ minHeight: "360px" }}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d180.60307266411306!2d172.37580335853272!3d-43.59302352348233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d3203007b582e1b%3A0x78adb1054c7e9e22!2sBrookside%20Motel!5e0!3m2!1sen!2sbd!4v1787894046074!5m2!1sen!2sbd"
+                width="600"
+                height="450"
+                style={{ border: 0, width: "100%", height: "100%", display: "block" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="Brookside Motel Google Maps Location"
+              />
+            </div>
           </div>
           <div className="rv">
             <p className="eyebrow">Location</p>
