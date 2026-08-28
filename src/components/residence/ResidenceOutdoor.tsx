@@ -60,7 +60,7 @@ export default function ResidenceOutdoor() {
           </div>
           <div className="split-media">
             <figure className="arch" style={{ margin: 0 }}>
-              <SlotImage src="/images/residenceimage/residence1.png" alt="Private outdoor spa and BBQ area" label="Spa &amp; BBQ yard" sub="Landscape · 11:10" dark />
+              <SlotImage src="/images/residenceimage/residence3.png" alt="Private outdoor spa and BBQ area" label="Spa &amp; BBQ yard" sub="Landscape · 11:10" dark />
             </figure>
           </div>
         </div>

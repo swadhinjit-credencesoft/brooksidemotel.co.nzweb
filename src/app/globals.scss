@@ -1585,6 +1585,9 @@ button.be-step{cursor:pointer;}
 .be-form-grid:last-of-type{margin-bottom:0;}
 .be-form-grid--2{grid-template-columns:1fr 1fr;}
 .be-form-grid--3{grid-template-columns:1fr 1fr 1.3fr;}
+.be-form-row{display:flex;gap:16px;margin-bottom:18px;}
+.be-form-row .be-field{flex:1;}
+.be-form-row:last-of-type{margin-bottom:0;}
 
 .be-field{flex:1;}
 .be-field label{
@@ -1949,10 +1952,8 @@ button.be-step{cursor:pointer;}
   .be-manage{padding:40px 20px 64px;}
   .be-perks-strip{grid-template-columns:1fr 1fr;gap:10px;padding:12px 16px;}
   .be-bar{position:static;padding:20px;}
-  .be-bar-form{flex-wrap:wrap;}
-  .be-bar-fields{flex-wrap:wrap;}
-  .be-bar-field:nth-child(1),.be-bar-field:nth-child(2){flex:1 1 calc(50% - 5px);}
-  .be-bar-field:nth-child(3),.be-bar-field:nth-child(4){flex:0 1 80px;}
+  .be-bar-form{grid-template-columns:1fr;}
+  .be-bar-fields{grid-template-columns:1fr 1fr;}
   .be-bar-btn{width:100%;}
   .be-card{grid-template-columns:1fr;min-height:auto;}
   .be-card-img{height:220px;min-height:auto;}
@@ -1972,18 +1973,35 @@ button.be-step{cursor:pointer;}
   .be-form-grid--2,.be-form-grid--3{grid-template-columns:1fr;}
   .be-confirm-card{padding:36px 28px 32px;}
   .be-brand{flex-direction:column;gap:12px;text-align:center;}
+  .be-brand-link{align-items:center;}
   .be-brand-right{flex-direction:column;gap:8px;}
   .be-detail-body{grid-template-columns:1fr;gap:24px;padding:24px 0;}
   .be-detail-aside{position:static;}
   .be-detail-amenities{grid-template-columns:1fr;}
   .be-detail-img{aspect-ratio:16/9;}
   .be-detail-name{font-size:22px;}
+  .be-steps{margin:0 0 28px;}
+}
+@media (max-width:600px){
+  .be-bar-fields{grid-template-columns:1fr;}
+  .be-bar{padding:16px;}
+  .be-bar-form{gap:12px;}
+  .be-perks-strip{grid-template-columns:1fr;gap:8px;padding:12px 14px;}
+  .be-confirm-view{padding:40px 14px 64px;}
+  .be-confirm-card{padding:36px 22px 28px;}
+  .be-gallery-nav{width:34px;height:34px;}
+  .be-manage{padding:40px 16px 64px;}
+  .be-manage-form,.be-manage-card{padding:22px 18px;}
+  .be-manage-dl{grid-template-columns:1fr;}
+  .be-promo-input-row{flex-direction:column;align-items:stretch;}
+  .be-promo-btn{width:100%;}
+  .be-brand{padding:18px 0 20px;margin-bottom:24px;}
+  .be-brand-logo{height:60px;max-width:240px;}
+  .be-summary{padding:22px 18px;}
 }
 @media (max-width:480px){
   .be-wrap{padding:0 14px 56px;}
   .be-manage{padding:32px 14px 56px;}
-  .be-perks-strip{grid-template-columns:1fr;gap:8px;padding:12px 14px;}
-  .be-bar-field:nth-child(1),.be-bar-field:nth-child(2),.be-bar-field:nth-child(3),.be-bar-field:nth-child(4){flex:1 1 100%;}
   .be-form-row{flex-direction:column;}
   .be-phone-prefix{flex:0 0 88px;width:88px;max-width:88px;min-width:88px;font-size:12px;padding:0 18px 0 8px!important;}
   .be-step{font-size:11px;padding:10px 8px;gap:6px;}
@@ -1993,6 +2011,10 @@ button.be-step{cursor:pointer;}
   .be-card-btn{width:100%;}
   .be-confirm-card{padding:28px 18px 24px;}
   .be-confirm-card h2{font-size:22px;}
+  .be-detail-name{font-size:20px;}
+  .be-detail-rate-box{padding:16px 18px;}
+  .be-card-img{height:190px;}
+  .be-card-specs{gap:6px;}
 }
 
 

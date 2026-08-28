@@ -8,7 +8,7 @@ export default function CrossSellSection() {
         <div className="cross-sell rv">
           <div className="cross-media">
             <figure className="arch" style={{ margin: 0 }}>
-              <SlotImage src="/images/residence-spa.jpg" alt="The Brookside Residence outdoor spa" label="The Residence" sub="Portrait · 3:4" />
+              <SlotImage src="/images/residenceimage/residence7.png" alt="The Brookside Residence outdoor spa" label="The Residence" sub="Portrait · 3:4" />
             </figure>
           </div>
           <div className="cross-body">
