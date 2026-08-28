@@ -7,7 +7,14 @@ export default function LocationSection() {
       <div className="wrap">
         <div className="loc-grid">
           <div className="rv">
-            <div className="map-frame">
+            <a
+              className="map-frame"
+              href="https://www.google.com/maps/search/?api=1&query=Brookside+Motel%2C+12+Brookside+Road%2C+Rolleston%2C+Canterbury"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ display: "block" }}
+              aria-label="Open Brookside Motel location in Google Maps"
+            >
               <svg className="mapart" viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                 <rect width="600" height="480" fill="#E1ECE9" />
                 <g stroke="#C0D3CD" strokeWidth="10" fill="none">
@@ -37,8 +44,8 @@ export default function LocationSection() {
                   <circle cx="12" cy="9" r="2.6" fill="#EFE6DD" />
                 </svg>
               </div>
-              <span className="map-note">Illustrative map — embed live Google Maps at build</span>
-            </div>
+              <span className="map-note">Click to open in Google Maps</span>
+            </a>
           </div>
           <div className="rv">
             <p className="eyebrow">Location</p>

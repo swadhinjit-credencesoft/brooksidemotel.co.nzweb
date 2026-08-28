@@ -17,7 +17,14 @@ export default function MapDirections() {
           <h2 className="h1">Interactive map &amp; driving directions</h2>
         </div>
         <div className="rv">
-          <div className="map-frame" style={{ aspectRatio: "16/7" }}>
+          <a
+            className="map-frame"
+            href="https://www.google.com/maps/search/?api=1&query=Brookside+Motel%2C+12+Brookside+Road%2C+Rolleston%2C+Canterbury"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ aspectRatio: "16/7", display: "block" }}
+            aria-label="Open Brookside Motel location in Google Maps"
+          >
             <svg className="mapart" viewBox="0 0 1200 525" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
               <rect width="1200" height="525" fill="#E1ECE9" />
               <g stroke="#C0D3CD" strokeWidth="14" fill="none">
@@ -46,8 +53,8 @@ export default function MapDirections() {
               </text>
             </svg>
             {mapPin}
-            <span className="map-note">Illustrative map — embed live Google Maps at build</span>
-          </div>
+            <span className="map-note">Click to open in Google Maps</span>
+          </a>
 
           <div className="directions">
             <b>Arriving via Southern Motorway (SH1)</b>
