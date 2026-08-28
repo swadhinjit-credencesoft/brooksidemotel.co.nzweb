@@ -29,7 +29,8 @@ export default function AboutPhilosophy() {
               accommodation you can count on, stay after stay.
             </p>
             <div className="welcome-sign" style={{ marginTop: "var(--s5)" }}>
-              <img className="mark" src="/logos/welcome-mark.png" alt="" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="mark" src="/logos/welcome-mark.png" alt="Brookside Motel emblem" width={54} height={54} />
               <p>
                 Opened October 2025
                 <br />

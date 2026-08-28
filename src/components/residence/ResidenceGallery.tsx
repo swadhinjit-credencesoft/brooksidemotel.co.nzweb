@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 
 const IMAGES = [
-  { src: "/images/residenceimage/residence1.png", alt: "Brookside Residence exterior view" },
-  { src: "/images/residenceimage/residence2.png", alt: "Brookside Residence living area" },
-  { src: "/images/residenceimage/residence3.png", alt: "Brookside Residence bedroom" },
-  { src: "/images/residenceimage/residence4.png", alt: "Brookside Residence kitchen and dining" },
-  { src: "/images/residenceimage/residence5.png", alt: "Brookside Residence outdoor spa and BBQ" },
-  { src: "/images/residenceimage/residence6.png", alt: "Brookside Residence full view" },
-  { src: "/images/residenceimage/residencefullview.png", alt: "Brookside Residence full view" },
+  { src: "/images/residenceimage/residence1.png", alt: "Brookside Residence luxury front exterior and private entrance" },
+  { src: "/images/residenceimage/residence2.png", alt: "Brookside Residence open-plan living lounge with 85-inch Smart TV" },
+  { src: "/images/residenceimage/residence3.png", alt: "Brookside Residence master bedroom suite with Super King bed" },
+  { src: "/images/residenceimage/residence4.png", alt: "Brookside Residence fully equipped designer kitchen and dining area" },
+  { src: "/images/residenceimage/residence5.png", alt: "Brookside Residence private outdoor courtyard with spa pool and BBQ" },
+  { src: "/images/residenceimage/residence6.png", alt: "Brookside Residence landscaped garden and patio area" },
+  { src: "/images/residenceimage/residencefullview.png", alt: "Brookside Residence architectural panoramic exterior view" },
 ];
 
 export default function ResidenceGallery() {

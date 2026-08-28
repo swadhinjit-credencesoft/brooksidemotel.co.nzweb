@@ -34,7 +34,7 @@ export default function WelcomeSection() {
             </p>
             <div className="welcome-sign">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="mark" src="/logos/welcome-mark.png" alt="" width={54} height={54} />
+              <img className="mark" src="/logos/welcome-mark.png" alt="Brookside Motel emblem" width={54} height={54} />
               <p>
                 Brand-new luxury motel accommodation
                 <br />

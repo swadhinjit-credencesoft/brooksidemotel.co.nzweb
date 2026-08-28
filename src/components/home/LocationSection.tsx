@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ArrowIcon from "@/components/ui/ArrowIcon";
+import { DRIVE_DESTINATIONS } from "@/content";
 
 export default function LocationSection() {
   return (
@@ -24,33 +25,17 @@ export default function LocationSection() {
             <p className="eyebrow">Location</p>
             <h2 className="h1">Minutes From Everywhere You Need to Be</h2>
             <ul className="drive">
-              <li>
-                <span className="d-time">
-                  20<sup>min</sup>
-                </span>
-                <span className="d-place">
-                  <b>Christchurch International Airport</b>
-                  <span>Approximately 17 km by road</span>
-                </span>
-              </li>
-              <li>
-                <span className="d-time">
-                  25<sup>min</sup>
-                </span>
-                <span className="d-place">
-                  <b>Christchurch Central / CBD</b>
-                  <span>Approximately 25 km by road</span>
-                </span>
-              </li>
-              <li>
-                <span className="d-time">
-                  2<sup>min</sup>
-                </span>
-                <span className="d-place">
-                  <b>Rolleston Square &amp; Town Centre</b>
-                  <span>Under 2 km — an easy walk or a short drive</span>
-                </span>
-              </li>
+              {DRIVE_DESTINATIONS.map((dest) => (
+                <li key={dest.name}>
+                  <span className="d-time">
+                    {dest.time}<sup>{dest.unit}</sup>
+                  </span>
+                  <span className="d-place">
+                    <b>{dest.name}</b>
+                    <span>{dest.distance}</span>
+                  </span>
+                </li>
+              ))}
             </ul>
             <div className="dining">
               <p>
@@ -69,3 +54,4 @@ export default function LocationSection() {
     </section>
   );
 }
+
