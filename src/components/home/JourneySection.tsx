@@ -27,7 +27,7 @@ export default function JourneySection() {
 
           <article className="jcard rv" id="residence">
             <div className="jcard-media">
-              <SlotImage src="/images/residence-exterior.jpg" alt="The Brookside Residence" label="The Residence" sub="Portrait · 4:5" />
+              <SlotImage src="/images/residenceimage/residence1.png" alt="The Brookside Residence" label="The Residence" sub="Portrait · 4:5" />
             </div>
             <div className="jcard-veil"></div>
             <div className="jcard-body">

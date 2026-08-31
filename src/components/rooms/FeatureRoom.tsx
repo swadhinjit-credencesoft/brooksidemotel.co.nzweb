@@ -44,7 +44,7 @@ export default function FeatureRoom() {
 
         <h4 className="incl-title">Included highlights</h4>
         <ul className="incl">
-          <li>Ground-floor courtyard access</li>
+          {/* <li>Ground-floor courtyard access</li> */}
           <li>Ultra-Fast Fibre Wi-Fi</li>
           <li>Smart TV with 20 Sky Channels &amp; Freeview</li>
           <li>Guest-controlled heat pump / aircon</li>

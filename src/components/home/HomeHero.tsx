@@ -8,15 +8,14 @@ export default function HomeHero() {
       <div className="hero-scrim"></div>
       <div className="hero-inner wrap">
         <div className="hero-copy">
-          <p className="hero-eyebrow">Opened October 2025 · Rolleston, Canterbury</p>
+          <p className="hero-eyebrow"> Rolleston, Canterbury</p>
           <h1 className="display">
-            Brand-New Luxury &amp;
+          Brand-New Motel Accommodation 
             <br />
             Modern Comfort in <em>Rolleston</em>
           </h1>
           <p className="hero-sub">
-            Quiet, modern motel accommodation and private luxury residences, just 20 minutes
-            from Christchurch Airport.
+          Modern, exceptionally clean rooms with free parking, fast Wi-Fi and easy motorway access — just 20 minutes from Christchurch Airport.
           </p>
           <div className="hero-actions">
             {/* <a className="btn btn-cream" href="/book">

@@ -10,12 +10,12 @@ export default function AboutPhilosophy() {
           <div className="split-body">
             <p className="eyebrow">Our core philosophy</p>
             <h3 className="h1">
-              Nailing the Essentials,
+              Everything You Need for an Easy,
               <br />
-              Every Single Stay
+              Comfortable Stay
             </h3>
             <p className="lead" style={{ margin: "var(--s3) 0" }}>
-              Opened in October 2025, Brookside Motel was built with a simple philosophy:{" "}
+               Brookside Motel was built with a simple philosophy:{" "}
               <b style={{ color: "var(--pine)" }}>nail the essentials, every time.</b>
             </p>
             <p>

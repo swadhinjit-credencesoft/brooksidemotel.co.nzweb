@@ -12,9 +12,9 @@ export default function WelcomeSection() {
           <div className="welcome-copy rv">
             <p className="eyebrow">Welcome to Brookside Motel</p>
             <h2 className="h1">
-              Nailing the Essentials,
+             Everything You Need for an Easy,
               <br />
-              Every Single Stay
+              Comfortable Stay
             </h2>
             <p className="lead" style={{ marginTop: "var(--s3)" }}>
               At Brookside Motel, our philosophy is simple: nail the essentials, every time.

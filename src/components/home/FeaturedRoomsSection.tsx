@@ -102,7 +102,7 @@ export default function FeaturedRoomsSection() {
               <ul className="room-specs">
                 <li>{SpecGuests}2–4 guests</li>
                 <li>{SpecBed}2 double beds</li>
-                <li>{SpecBuilding}Full ground-floor access</li>
+                {/* <li>{SpecBuilding}Full ground-floor access</li> */}
                 <li>{SpecTv}Smart TV &amp; fibre Wi-Fi</li>
               </ul>
               <div className="room-cta">
