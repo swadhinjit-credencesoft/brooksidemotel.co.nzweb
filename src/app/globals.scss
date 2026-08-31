@@ -357,9 +357,9 @@ h4.h3{font-size:22px;line-height:1.4;font-weight:500;margin:0;}
 .drive .d-time{font-size:30px;font-weight:600;color:var(--pine);line-height:1;
   letter-spacing:-.02em;min-width:110px;}
 .drive .d-time sup{font-size:13px;font-weight:400;color:var(--deep-gold);top:-.9em;margin-left:3px;}
-.drive .d-place{flex:1;}
-.drive .d-place b{display:block;font-size:16px;font-weight:500;color:var(--charcoal);}
-.drive .d-place span{font-size:13.5px;color:var(--sage-text);}
+.drive .d-place{flex:1;min-width:0;}
+.drive .d-place b{display:block;font-size:16px;font-weight:500;color:var(--charcoal);overflow-wrap:break-word;}
+.drive .d-place span{font-size:13.5px;color:var(--sage-text);overflow-wrap:break-word;}
 .dining{margin-top:var(--s5);padding:var(--s4);background:var(--brook-wash);
   border-radius:var(--r-card);border-left:3px solid var(--braided-gold);}
 .dining p{margin:0;font-size:15px;line-height:1.7;color:var(--charcoal);}
@@ -813,8 +813,9 @@ table.facts td:first-child{font-weight:600;color:var(--pine);}
 .contact-card.dark{background:var(--pine);color:var(--alpine-cream);}
 .contact-card h3{margin:0 0 var(--s4);}
 .contact-card.dark h3{color:var(--alpine-cream);}
-.cinfo{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3);}
-.cinfo li{display:grid;grid-template-columns:auto 1fr;gap:var(--s2);align-items:start;}
+.cinfo{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3);min-width:0;}
+.cinfo li{display:grid;grid-template-columns:auto 1fr;gap:var(--s2);align-items:start;min-width:0;}
+.cinfo li>div{min-width:0;}
 .cinfo .c-ico{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;
   background:var(--brook-wash);color:var(--pine);}
 .contact-card.dark .c-ico{background:rgba(239,230,221,.1);color:var(--gold-light);
@@ -822,7 +823,8 @@ table.facts td:first-child{font-weight:600;color:var(--pine);}
 .cinfo .c-l{display:block;font-size:10.5px;font-weight:600;letter-spacing:.15em;
   text-transform:uppercase;color:var(--sage-text);margin-bottom:5px;}
 .contact-card.dark .c-l{color:var(--gold-light);}
-.cinfo .c-v{font-size:15.5px;color:var(--charcoal);line-height:1.6;}
+.cinfo .c-v{font-size:15.5px;color:var(--charcoal);line-height:1.6;
+  overflow-wrap:break-word;word-break:break-word;}
 .contact-card.dark .c-v{color:var(--alpine-cream);}
 .cinfo a.c-v:hover{color:var(--deep-gold);}
 
