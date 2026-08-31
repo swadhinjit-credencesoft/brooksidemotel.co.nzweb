@@ -67,12 +67,12 @@ export default function FeaturedRoomsSection() {
         <div className="rooms">
           <article className="room rv">
             <div className="room-media">
-              <SlotImage src="/images/superior-outdoor-area.jpg" alt="SUPERIOR ROOM - OUTDOOR AREA" label="Superior · outdoor area" sub="Landscape · 3:2" />
+              <SlotImage src="/images/superior-outdoor-area.jpg" alt="Superior Super King room with private patio" label="Superior · outdoor area" sub="Landscape · 3:2" />
               <span className="room-flag">Best seller</span>
             </div>
             <div className="room-body">
               <h3 className="h3">
-                <Link href="/motel-rooms/superior-outdoor">SUPERIOR ROOM - OUTDOOR AREA</Link>
+                <Link href="/motel-rooms/superior-outdoor">Superior Super King – Private Patio</Link>
               </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}2 guests</li>
@@ -85,7 +85,7 @@ export default function FeaturedRoomsSection() {
                   className="btn btn-primary"
                   roomId={SWIFTBOOK_ROOM_IDS["superior-outdoor"]}
                 >
-                  Book direct &amp; save
+                  Check availability
                 </BookingButton>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function FeaturedRoomsSection() {
             </div>
             <div className="room-body">
               <h3 className="h3">
-                <Link href="/motel-rooms/deluxe-two-doubles">DELUXE ROOM - 2 DOUBLE BEDS</Link>
+                <Link href="/motel-rooms/deluxe-two-doubles">Deluxe Room – 2 Double Beds</Link>
               </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}2–4 guests</li>
@@ -110,7 +110,7 @@ export default function FeaturedRoomsSection() {
                   className="btn btn-primary"
                   roomId={SWIFTBOOK_ROOM_IDS["deluxe-two-doubles"]}
                 >
-                  Book direct &amp; save
+                  Check availability
                 </BookingButton>
               </div>
             </div>

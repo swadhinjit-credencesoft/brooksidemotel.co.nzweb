@@ -50,6 +50,7 @@ export interface RoomData {
   hideFromGrid?: boolean;
   summary?: string;
   name: string;
+  shortName?: string;
   liveName: ReactNode;
   description: ReactNode;
   descriptionExtra?: ReactNode;

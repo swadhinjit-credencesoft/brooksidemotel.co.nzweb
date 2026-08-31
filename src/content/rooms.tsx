@@ -13,7 +13,8 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Our best-seller: ground-floor Superior Room with a Super King bed and private outdoor courtyard seating in Rolleston.",
-    name: "SUPERIOR ROOM - OUTDOOR AREA",
+    name: "Superior Super King – Private Patio",
+    shortName: "Superior Super King",
     liveName: (
       <>
         Also referred to as <em>Superior King Suite with Outdoor Seating</em>
@@ -67,7 +68,8 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Spacious interconnected Superior Room with Super King or twin setup, work desk and flexible adjoining-room access for families and groups.",
-    name: "SUPERIOR ROOM - INTERCONNECTED (WITH SOFA)",
+    name: "Superior Interconnected – With Sofa",
+    shortName: "Superior Interconnected",
     liveName: (
       <>
         Also referred to as <em>Superior King Interconnected Suite</em>
@@ -77,7 +79,7 @@ export const ROOMS: RoomData[] = [
       "Enjoy comfort and flexibility in our spacious Superior Room, perfect for families, friends, or anyone who appreciates a little extra space. This room can be set up with either a Super King bed or two Singles.",
     specs: [
       { icon: "guests", text: "2–3 guests" },
-      { icon: "bed", text: "1 Super King + sofa / interconnected" },
+      { icon: "bed", text: "Super King or twins + sofa" },
       { icon: "door", text: "Flexible adjoining room access" },
     ],
     highlights: [
@@ -109,7 +111,8 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Family-friendly Deluxe Room with two double beds, kitchenette and full ground-floor access — sleeps up to four guests.",
-    name: "DELUXE ROOM - 2 DOUBLE BEDS",
+    name: "Deluxe Room – 2 Double Beds",
+    shortName: "Deluxe Double",
     liveName: (
       <>
         Also referred to as <em>Deluxe Double Room (Family / Twin)</em>
@@ -151,7 +154,8 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Peaceful top-floor Deluxe Room with elevated views, Super King bed, climate control and fibre Wi-Fi.",
-    name: "DELUXE ROOM - TOP FLOOR",
+    name: "Deluxe Top Floor – Super King",
+    shortName: "Deluxe Top Floor",
     liveName: (
       <>
         Also referred to as <em>Deluxe Top Floor Suite</em>
@@ -193,7 +197,8 @@ export const ROOMS: RoomData[] = [
     flag: "accessible",
     summary:
       "Purpose-built accessible Deluxe Room: level entry, roll-in shower, handrails and a Super King bed.",
-    name: "ACCESSIBLE DELUXE ROOM - 1 SUPERKING BED",
+    name: "Accessible Deluxe – Super King",
+    shortName: "Accessible Deluxe",
     liveName: (
       <>
         Also referred to as <em>Accessible Super King Room</em>
@@ -235,6 +240,7 @@ export const ROOMS: RoomData[] = [
     summary:
       "Cosy ground-floor Deluxe Room with one double bed, kitchenette and Smart TV — ideal for solo travellers or couples.",
     name: "Deluxe Room – 1 Double Bed",
+    shortName: "Deluxe Double",
     liveName: "Listed on brooksidemotel.co.nz/accommodation",
     description:
       "Ideal for solo travellers or couples, this room features a comfortable Double bed and all the essentials for a relaxing stay.",
