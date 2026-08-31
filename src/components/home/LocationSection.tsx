@@ -8,7 +8,7 @@ export default function LocationSection() {
       <div className="wrap">
         <div className="loc-grid">
           <div className="rv">
-            <div className="map-frame" style={{ minHeight: "360px" }}>
+            <div className="map-frame">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d261477.3042636744!2d172.28803824716857!3d-43.607720937249276!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d3203007b582e1b%3A0x78adb1054c7e9e22!2sBrookside%20Motel!5e0!3m2!1sen!2sbd!4v1787899286315!5m2!1sen!2sbd"
                 width="600"
