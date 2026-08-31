@@ -76,7 +76,7 @@ export default function SiteFooter() {
                   <Link href="/amenities">Amenities</Link>
                 </li>
                 <li>
-                  <Link href="/brookside-residence">Brookside Residence</Link>
+                  <Link href="/brookside-residence">BROOKSIDE RESIDENCE</Link>
                 </li>
                 <li>
                   <Link href="/faq">FAQ</Link>

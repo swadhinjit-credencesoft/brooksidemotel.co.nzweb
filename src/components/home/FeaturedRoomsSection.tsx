@@ -97,7 +97,7 @@ export default function FeaturedRoomsSection() {
             </div>
             <div className="room-body">
               <h3 className="h3">
-                <Link href="/motel-rooms/deluxe-two-doubles">Deluxe Room – 2 Double Beds</Link>
+                <Link href="/motel-rooms/deluxe-two-doubles">DELUXE ROOM - 2 DOUBLE BEDS</Link>
               </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}2–4 guests</li>
@@ -118,12 +118,12 @@ export default function FeaturedRoomsSection() {
 
           <article className="room rv">
             <div className="room-media">
-              <SlotImage src="/images/residenceimage/residence4.png" alt="The Brookside Residence" label="The Residence" sub="Landscape · 3:2" />
+              <SlotImage src="/images/residenceimage/residence4.png" alt="THE BROOKSIDE RESIDENCE" label="The Residence" sub="Landscape · 3:2" />
               <span className="room-flag">4-bedroom home</span>
             </div>
             <div className="room-body">
               <h3 className="h3">
-                <Link href="/brookside-residence">The Brookside Residence</Link>
+                <Link href="/brookside-residence">THE BROOKSIDE RESIDENCE</Link>
               </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}8 adults</li>

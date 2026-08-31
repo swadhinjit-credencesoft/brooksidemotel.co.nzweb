@@ -12,7 +12,7 @@ import ResidenceIncluded from "@/components/residence/ResidenceIncluded";
 import ResidenceBookingBand from "@/components/residence/ResidenceBookingBand";
 
 export const metadata: Metadata = {
-  title: "Brookside Residence — 4-Bedroom Luxury Home, Rolleston",
+  title: "BROOKSIDE RESIDENCE — 4-Bedroom Luxury Home, Rolleston",
   description:
     "Our flagship 4-bedroom home in Rolleston with private outdoor spa, BBQ area, 3 bathrooms and an 85-inch Smart TV lounge. Sleeps up to 8 adults.",
 };
@@ -22,12 +22,12 @@ export default function ResidencePage() {
     <>
       <PageHero
         src="/images/residenceimage/residence4.png"
-        alt="The Brookside Residence exterior and spa"
+        alt="THE BROOKSIDE RESIDENCE exterior and spa"
         placeholderLabel="Residence exterior / spa / living"
         placeholderSub="Landscape · 21:9 slider"
-        crumb="Brookside Residence"
+        crumb="BROOKSIDE RESIDENCE"
         tag="Flagship 4-bedroom home"
-        title="Brookside Residence"
+        title="BROOKSIDE RESIDENCE"
         sub="A luxury stay beyond expectations — our flagship 4-bedroom home with private outdoor spa, BBQ area, and resort-style living in Rolleston."
         cta={
           <p style={{ marginTop: "var(--s4)" }}>

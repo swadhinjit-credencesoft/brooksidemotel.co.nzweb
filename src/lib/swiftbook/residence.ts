@@ -1,5 +1,5 @@
 /**
- * Brookside Residence — STAAH CSBE API client.
+ * BROOKSIDE RESIDENCE — STAAH CSBE API client.
  *
  * Separate from the motel booking engine. Uses the Residence property
  * credentials verified from live network capture (2026-08-26):

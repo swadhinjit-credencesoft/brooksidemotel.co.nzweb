@@ -106,7 +106,7 @@ export default function PostDining() {
 
       <h3>5. Supermarkets for extended stays</h3>
       <p>
-        If you&apos;re staying in our Brookside Residence or using your room&apos;s in-room
+        If you&apos;re staying in our BROOKSIDE RESIDENCE or using your room&apos;s in-room
         kitchenette, grocery shopping is completely hassle-free. Rolleston has three major
         full-scale supermarkets just minutes away:
       </p>

@@ -46,7 +46,7 @@ export const RESIDENCE_PROPERTY = {
   idDec: "58428",
   trackerB64: "NTg0Mjg=",
   ratePlanId: "1513400000000001",
-  name: "The Brookside Residence",
+  name: "THE BROOKSIDE RESIDENCE",
   bookingUrl: "https://www.swiftbook.io/inst/#home?propertyId=622NTgOqOT6TvN8eZciKNab5xydWTYGd3WNTg0Mjg=&JDRN=Y",
   roomIds: {
     primary: "253372",

@@ -4,7 +4,7 @@ export default function ResidenceIdeal() {
       <div className="wrap">
         <div className="sec-head center rv">
           <p className="eyebrow">Ideal for</p>
-          <h2 className="h1">Who loves Brookside Residence?</h2>
+          <h2 className="h1">Who loves BROOKSIDE RESIDENCE?</h2>
         </div>
         <div className="ideal rv">
           <div className="ideal-card">

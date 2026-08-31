@@ -67,7 +67,7 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Spacious interconnected Superior Room with Super King or twin setup, work desk and flexible adjoining-room access for families and groups.",
-    name: "Superior Room – Interconnected (with Sofa)",
+    name: "SUPERIOR ROOM - INTERCONNECTED (WITH SOFA)",
     liveName: (
       <>
         Also referred to as <em>Superior King Interconnected Suite</em>
@@ -109,7 +109,7 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Family-friendly Deluxe Room with two double beds, kitchenette and full ground-floor access — sleeps up to four guests.",
-    name: "Deluxe Room – 2 Double Beds",
+    name: "DELUXE ROOM - 2 DOUBLE BEDS",
     liveName: (
       <>
         Also referred to as <em>Deluxe Double Room (Family / Twin)</em>
@@ -151,7 +151,7 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Peaceful top-floor Deluxe Room with elevated views, Super King bed, climate control and fibre Wi-Fi.",
-    name: "Deluxe Room – Top Floor",
+    name: "DELUXE ROOM - TOP FLOOR",
     liveName: (
       <>
         Also referred to as <em>Deluxe Top Floor Suite</em>
@@ -193,7 +193,7 @@ export const ROOMS: RoomData[] = [
     flag: "accessible",
     summary:
       "Purpose-built accessible Deluxe Room: level entry, roll-in shower, handrails and a Super King bed.",
-    name: "Accessible Deluxe Room – 1 Superking Bed",
+    name: "ACCESSIBLE DELUXE ROOM - 1 SUPERKING BED",
     liveName: (
       <>
         Also referred to as <em>Accessible Super King Room</em>

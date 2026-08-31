@@ -42,7 +42,7 @@ export interface HeaderLink {
 
 export const HEADER_LINKS: HeaderLink[] = [
   { label: "Motel Rooms", href: "/motel-rooms" },
-  { label: "Brookside Residence", href: "/brookside-residence" },
+  { label: "BROOKSIDE RESIDENCE", href: "/brookside-residence" },
   { label: "Amenities", href: "/amenities" },
   { label: "Local Guide", href: "/local-guide" },
   { label: "FAQ", href: "/faq" },
@@ -52,7 +52,7 @@ export const HEADER_LINKS: HeaderLink[] = [
 
 export const IMG_BASE = "/images/";
 
-/* ─── Brookside Residence Configuration ─── */
+/* ─── BROOKSIDE RESIDENCE Configuration ─── */
 export const RESIDENCE_PROPERTY_ID_B64 = RESIDENCE_PROPERTY.idB64;
 export const RESIDENCE_PROPERTY_ID_DEC = RESIDENCE_PROPERTY.idDec;
 export const RESIDENCE_TRACKER_ID_B64 = RESIDENCE_PROPERTY.trackerB64;

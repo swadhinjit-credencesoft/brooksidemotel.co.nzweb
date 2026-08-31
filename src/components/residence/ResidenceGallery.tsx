@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 
 const IMAGES = [
-  { src: "/images/residenceimage/residence1.png", alt: "Brookside Residence luxury front exterior and private entrance" },
-  { src: "/images/residenceimage/residence2.png", alt: "Brookside Residence open-plan living lounge with 85-inch Smart TV" },
-  { src: "/images/residenceimage/residence3.png", alt: "Brookside Residence master bedroom suite with Super King bed" },
-  { src: "/images/residenceimage/residence4.png", alt: "Brookside Residence fully equipped designer kitchen and dining area" },
-  { src: "/images/residenceimage/residence5.png", alt: "Brookside Residence private outdoor courtyard with spa pool and BBQ" },
-  { src: "/images/residenceimage/residence6.png", alt: "Brookside Residence landscaped garden and patio area" },
-  { src: "/images/residenceimage/residencefullview.png", alt: "Brookside Residence architectural panoramic exterior view" },
+  { src: "/images/residenceimage/residence1.png", alt: "BROOKSIDE RESIDENCE luxury front exterior and private entrance" },
+  { src: "/images/residenceimage/residence2.png", alt: "BROOKSIDE RESIDENCE open-plan living lounge with 85-inch Smart TV" },
+  { src: "/images/residenceimage/residence3.png", alt: "BROOKSIDE RESIDENCE master bedroom suite with Super King bed" },
+  { src: "/images/residenceimage/residence4.png", alt: "BROOKSIDE RESIDENCE fully equipped designer kitchen and dining area" },
+  { src: "/images/residenceimage/residence5.png", alt: "BROOKSIDE RESIDENCE private outdoor courtyard with spa pool and BBQ" },
+  { src: "/images/residenceimage/residence6.png", alt: "BROOKSIDE RESIDENCE landscaped garden and patio area" },
+  { src: "/images/residenceimage/residencefullview.png", alt: "BROOKSIDE RESIDENCE architectural panoramic exterior view" },
 ];
 
 export default function ResidenceGallery() {
@@ -43,7 +43,7 @@ export default function ResidenceGallery() {
         <div className="sec-head rv">
           <p className="eyebrow">Photo tour</p>
           <h2 className="h1">Residence gallery</h2>
-          <p>Take a look around the Brookside Residence before you book.</p>
+          <p>Take a look around THE BROOKSIDE RESIDENCE before you book.</p>
         </div>
         <div className="gallery-grid rv">
           {IMAGES.map((img, i) => (

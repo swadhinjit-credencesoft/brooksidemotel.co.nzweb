@@ -141,7 +141,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
       {
         q: "Are kitchen facilities available in the rooms?",
         aText:
-          "Yes. Our rooms feature convenient kitchenette setups equipped with a microwave, refrigerator, electric kettle, and coffee/tea stations. If you require a full designer kitchen, consider booking the Brookside Residence — our 4-bedroom house.",
+          "Yes. Our rooms feature convenient kitchenette setups equipped with a microwave, refrigerator, electric kettle, and coffee/tea stations. If you require a full designer kitchen, consider booking THE BROOKSIDE RESIDENCE — our 4-bedroom house.",
         a: (
           <p>
             Yes. Our rooms feature convenient kitchenette setups equipped with a microwave,
@@ -149,7 +149,7 @@ export const FAQ_CATEGORIES: FaqCategory[] = [
             designer kitchen with an oven and dishwasher, consider booking our 4-bedroom
             house —{" "}
             <Link href="/brookside-residence" style={{ color: "var(--deep-gold)", textDecoration: "underline" }}>
-              <b>Brookside Residence</b>
+              <b>BROOKSIDE RESIDENCE</b>
             </Link>
             .
           </p>

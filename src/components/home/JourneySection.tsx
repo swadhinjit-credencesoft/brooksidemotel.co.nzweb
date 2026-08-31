@@ -27,12 +27,12 @@ export default function JourneySection() {
 
           <article className="jcard rv" id="residence">
             <div className="jcard-media">
-              <SlotImage src="/images/residenceimage/residence1.png" alt="The Brookside Residence" label="The Residence" sub="Portrait · 4:5" />
+              <SlotImage src="/images/residenceimage/residence1.png" alt="THE BROOKSIDE RESIDENCE" label="The Residence" sub="Portrait · 4:5" />
             </div>
             <div className="jcard-veil"></div>
             <div className="jcard-body">
               <span className="jtag jtag-res">Flagship home</span>
-              <h3 className="h2">The Brookside Residence</h3>
+              <h3 className="h2">THE BROOKSIDE RESIDENCE</h3>
               <p>
                 Our flagship 4-bedroom luxury home featuring an outdoor spa, private BBQ, 3
                 bathrooms, an 85-inch Smart TV lounge and a Smart TV in every bedroom. Sleeps up

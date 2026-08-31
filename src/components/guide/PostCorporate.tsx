@@ -106,10 +106,10 @@ export default function PostCorporate() {
         room no matter what time you arrive.
       </p>
 
-      <h3>5. Corporate group options: The Brookside Residence</h3>
+      <h3>5. Corporate group options: THE BROOKSIDE RESIDENCE</h3>
       <p>
         Travelling with a team or managing a longer-term regional contract? In addition to our
-        individual motel suites, we offer The Brookside Residence — a flagship 4-bedroom,
+        individual motel suites, we offer THE BROOKSIDE RESIDENCE — a flagship 4-bedroom,
         3-bathroom private home. Featuring a full designer kitchen, an 85-inch Smart TV
         lounge, high-speed Wi-Fi, and a private outdoor spa, it provides corporate work crews
         with a premium home away from home.

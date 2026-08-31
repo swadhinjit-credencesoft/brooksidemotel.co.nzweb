@@ -8,7 +8,7 @@ export default function ResidenceIntro() {
         <div className="intro-block rv">
           <p className="eyebrow">Introduction &amp; luxury positioning</p>
           <p className="lead">
-            Welcome to <b style={{ color: "var(--pine)" }}>Brookside Residence</b>, the flagship
+            Welcome to <b style={{ color: "var(--pine)" }}>BROOKSIDE RESIDENCE</b>, the flagship
             premium home of Brookside Motel Rolleston, crafted for guests who appreciate space,
             style, and absolute comfort. Located centrally on Moore Street, this private
             residence blends high-quality furnishings, modern architectural design, and
@@ -16,7 +16,7 @@ export default function ResidenceIntro() {
           </p>
           <p style={{ color: "var(--sage-text)", marginTop: "var(--s3)" }}>
             Whether you are travelling with family, hosting a group reunion, or seeking a
-            spacious long-stay home for corporate executives, Brookside Residence is designed to
+            spacious long-stay home for corporate executives, BROOKSIDE RESIDENCE is designed to
             impress from the moment you walk through the door — right down to the starter pack of
             bottled water, tea, coffee, sugar and milk waiting on arrival.
           </p>
