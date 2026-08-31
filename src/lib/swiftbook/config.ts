@@ -97,23 +97,25 @@ export function getMotelSwiftBookUrl(roomId?: string, stay?: BookingStayDates): 
 
 /** Generate internal URL to /book route */
 export function getMotelBookPageUrl(opts: BookingPageOptions = {}): string {
+  const base = MOTEL_PROPERTY.bookingUrl.replace(/&JDRN=Y$/, "");
   const p = new URLSearchParams();
-  if (opts.room) p.set("room", opts.room);
+  if (opts.room) p.set("RoomID", opts.room);
   if (opts.checkIn) p.set("checkIn", opts.checkIn);
   if (opts.checkOut) p.set("checkOut", opts.checkOut);
-  if (opts.adults) p.set("adults", String(opts.adults));
-  if (opts.children) p.set("children", String(opts.children));
+  if (opts.adults) p.set("Adult", String(opts.adults));
+  if (opts.children) p.set("Children", String(opts.children));
   const qs = p.toString();
-  return qs ? `/book?${qs}` : "/book";
+  return qs ? `${base}&JDRN=Y&${qs}` : MOTEL_PROPERTY.bookingUrl;
 }
 
 /** Generate internal URL to /book-residence route */
 export function getResidenceBookPageUrl(opts: BookingPageOptions = {}): string {
+  const base = RESIDENCE_PROPERTY.bookingUrl.replace(/&JDRN=Y$/, "");
   const p = new URLSearchParams();
   if (opts.checkIn) p.set("checkIn", opts.checkIn);
   if (opts.checkOut) p.set("checkOut", opts.checkOut);
-  if (opts.adults) p.set("adults", String(opts.adults));
-  if (opts.children) p.set("children", String(opts.children));
+  if (opts.adults) p.set("Adult", String(opts.adults));
+  if (opts.children) p.set("Children", String(opts.children));
   const qs = p.toString();
-  return qs ? `/book-residence?${qs}` : "/book-residence";
+  return qs ? `${base}&JDRN=Y&${qs}` : RESIDENCE_PROPERTY.bookingUrl;
 }

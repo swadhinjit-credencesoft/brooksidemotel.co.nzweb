@@ -13,7 +13,7 @@ export default function FeatureRoom() {
       </div>
       <div className="feature-body">
         <span className="room-flag static">Our best seller</span>
-        <h3 className="h2">Superior Room – Outdoor Area</h3>
+        <h3 className="h2">SUPERIOR ROOM - OUTDOOR AREA</h3>
         <p className="room-live-name">
           Also referred to as <em>Superior King Suite with Outdoor Seating</em>
         </p>

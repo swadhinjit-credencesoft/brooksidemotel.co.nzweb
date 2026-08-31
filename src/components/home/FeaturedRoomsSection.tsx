@@ -67,12 +67,12 @@ export default function FeaturedRoomsSection() {
         <div className="rooms">
           <article className="room rv">
             <div className="room-media">
-              <SlotImage src="/images/superior-outdoor-area.jpg" alt="Superior Room – Outdoor Area" label="Superior · outdoor area" sub="Landscape · 3:2" />
+              <SlotImage src="/images/superior-outdoor-area.jpg" alt="SUPERIOR ROOM - OUTDOOR AREA" label="Superior · outdoor area" sub="Landscape · 3:2" />
               <span className="room-flag">Best seller</span>
             </div>
             <div className="room-body">
               <h3 className="h3">
-                <Link href="/motel-rooms/superior-outdoor">Superior Room – Outdoor Area</Link>
+                <Link href="/motel-rooms/superior-outdoor">SUPERIOR ROOM - OUTDOOR AREA</Link>
               </h3>
               <ul className="room-specs">
                 <li>{SpecGuests}2 guests</li>

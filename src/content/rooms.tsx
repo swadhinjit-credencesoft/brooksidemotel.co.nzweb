@@ -13,7 +13,7 @@ export const ROOMS: RoomData[] = [
     },
     summary:
       "Our best-seller: ground-floor Superior Room with a Super King bed and private outdoor courtyard seating in Rolleston.",
-    name: "Superior Room – Outdoor Area",
+    name: "SUPERIOR ROOM - OUTDOOR AREA",
     liveName: (
       <>
         Also referred to as <em>Superior King Suite with Outdoor Seating</em>

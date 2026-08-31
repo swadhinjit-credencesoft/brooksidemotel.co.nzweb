@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import BookingEngine from "@/components/booking/BookingEngine";
+import { BOOKING_URL } from "@/lib/site";
+import BookingRedirect from "@/components/booking/BookingRedirect";
 
 export const metadata: Metadata = {
   title: "Book Direct — Brookside Motel, Rolleston",
@@ -30,7 +31,7 @@ export default function BookPage() {
         </div>
       }
     >
-      <BookingEngine />
+      <BookingRedirect to={BOOKING_URL} />
     </Suspense>
   );
 }

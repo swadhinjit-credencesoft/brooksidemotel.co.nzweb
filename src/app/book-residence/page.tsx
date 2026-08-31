@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import ResidenceBookingEngine from "@/components/booking/ResidenceBookingEngine";
+import { RESIDENCE_BOOKING_URL } from "@/lib/site";
+import BookingRedirect from "@/components/booking/BookingRedirect";
 
 export const metadata: Metadata = {
   title: "Book the Brookside Residence — Direct | Rolleston, Canterbury",
@@ -30,7 +31,7 @@ export default function BookResidencePage() {
         </div>
       }
     >
-      <ResidenceBookingEngine />
+      <BookingRedirect to={RESIDENCE_BOOKING_URL} />
     </Suspense>
   );
 }
