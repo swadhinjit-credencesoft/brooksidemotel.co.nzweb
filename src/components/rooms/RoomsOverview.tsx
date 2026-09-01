@@ -8,12 +8,12 @@ export default function RoomsOverview() {
       <ContourArt />
       <div className="wrap">
         <div className="intro-block rv">
-          <p className="eyebrow">Every room, ground floor</p>
+          <p className="eyebrow">Every room</p>
           <p className="lead">
-            Opened in October 2025, every room at Brookside Motel is thoughtfully built for solid
+             every room at Brookside Motel is thoughtfully built for solid
             rest and effortless convenience. Whether you are a solo corporate traveller needing a
             quiet workspace, a couple on a weekend getaway, or a trade crew working locally, our
-            modern ground-floor rooms deliver a seamless stay.
+            modern rooms deliver a seamless stay.
           </p>
         </div>
 

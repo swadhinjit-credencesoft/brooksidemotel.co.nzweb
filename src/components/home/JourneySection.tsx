@@ -15,7 +15,7 @@ export default function JourneySection() {
               <span className="jtag jtag-motel">The motel</span>
               <h3 className="h2">Brookside Motel Units</h3>
               <p>
-                Brand-new, ground-floor motel rooms with Super King or Double beds, luxury
+                Brand-new,  motel rooms with Super King or Double beds, luxury
                 toiletries, and quiet surroundings. Ideal for corporate travellers, tradies, and
                 event-goers.
               </p>

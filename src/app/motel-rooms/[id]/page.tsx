@@ -105,7 +105,7 @@ export default async function RoomDetailPage({
         title={room.name}
         sub={
           room.specs.map((s) => s.text).join(" · ") ||
-          "Brand-new ground-floor comfort in Rolleston."
+          "Brand-new  comfort in Rolleston."
         }
       />
 

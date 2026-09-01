@@ -12,7 +12,7 @@ export const ROOMS: RoomData[] = [
       sub: "Landscape · 3:2",
     },
     summary:
-      "Our best-seller: ground-floor Superior Room with a Super King bed and private outdoor courtyard seating in Rolleston.",
+      "Our best-seller:  Superior Room with a Super King bed and private outdoor courtyard seating in Rolleston.",
     name: "Superior Super King – Private Patio",
     shortName: "Superior Super King",
     liveName: (
@@ -39,7 +39,7 @@ export const ROOMS: RoomData[] = [
       { icon: "sun", text: "Private outdoor courtyard" },
     ],
     highlights: [
-      "Ground-floor courtyard access",
+      " courtyard access",
       "Ultra-Fast Fibre Wi-Fi",
       "Smart TV with 20 Sky Channels & Freeview",
       "Guest-controlled heat pump / aircon",
@@ -139,7 +139,7 @@ export const ROOMS: RoomData[] = [
       { icon: "bath", text: "Spacious private bathroom" },
       { icon: "wifi", text: "Free Fibre Wi-Fi" },
       { icon: "car", text: "Free on-site parking" },
-      { icon: "building", text: "Full ground-floor accessibility" },
+      { icon: "building", text: "Full  accessibility" },
       { icon: "toiletries", text: "Luxury toiletries & plush towels" },
     ],
     cta: "Book Deluxe Family Room",
@@ -248,7 +248,7 @@ export const ROOMS: RoomData[] = [
     specs: [
       { icon: "guests", text: "1–2 guests" },
       { icon: "bed", text: "1 double bed" },
-      { icon: "building", text: "Ground floor" },
+      { icon: "building", text: " floor" },
     ],
     highlights: [
       "Double bed with hotel-grade linen",

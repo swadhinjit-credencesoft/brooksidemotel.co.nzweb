@@ -20,7 +20,7 @@ const MOTEL_REASONS: { text: string; sub: string }[] = [
   { text: "Easy motorway access", sub: "Right by the SH1 interchange" },
   { text: "20 min from Christchurch Airport", sub: "Short, simple drive" },
   { text: "Close to Rolleston town centre", sub: "Under 2 minutes away" },
-  { text: "Corporate & crew friendly", sub: "Work vans welcome, ground-floor rooms" },
+  { text: "Corporate & crew friendly", sub: "Work vans welcome,  rooms" },
 ];
 
 export default function WelcomeSection() {

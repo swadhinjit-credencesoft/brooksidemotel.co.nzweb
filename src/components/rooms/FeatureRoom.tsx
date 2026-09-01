@@ -27,7 +27,7 @@ export default function FeatureRoom() {
           Also referred to as <em>Superior King Suite with Outdoor Seating</em>
         </p>
         <p className="room-spec-line" style={{ marginBottom: "var(--s3)" }}>
-          Sleeps 2 | Super King | Ground floor
+          Sleeps 2 | Super King | 
         </p>
         <p className="lead">
           Relax and unwind in our beautifully appointed Superior Deluxe Room, complete with your
