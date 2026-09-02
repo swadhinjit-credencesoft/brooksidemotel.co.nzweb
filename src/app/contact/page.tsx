@@ -3,6 +3,7 @@ import PageHero from "@/components/ui/PageHero";
 import ContactGrid from "@/components/contact/ContactGrid";
 import MapDirections from "@/components/contact/MapDirections";
 import EatShopSection from "@/components/contact/EatShopSection";
+import { getOrganizationJsonLd, getBreadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact Us & Location \u2014 Brookside Motel, Rolleston",
@@ -11,8 +12,22 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const orgJsonLd = getOrganizationJsonLd();
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Contact Us", url: "/contact" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageHero
         src="/images/contact-hero.jpg"
         alt="Rolleston, Canterbury"

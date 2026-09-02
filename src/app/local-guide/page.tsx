@@ -4,6 +4,7 @@ import GuideIndex from "@/components/guide/GuideIndex";
 import PostDining from "@/components/guide/PostDining";
 import PostCorporate from "@/components/guide/PostCorporate";
 import PostAirport from "@/components/guide/PostAirport";
+import { getBreadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Blog & Local Guide \u2014 Brookside Motel, Rolleston",
@@ -18,8 +19,17 @@ export const metadata: Metadata = {
 };
 
 export default function LocalGuidePage() {
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Blog & Local Guide", url: "/local-guide" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageHero
         src="/images/local-guide-hero.jpg"
         alt="Canterbury countryside near Rolleston"

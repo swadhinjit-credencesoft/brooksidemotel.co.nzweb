@@ -5,6 +5,7 @@ import AmenitiesDetailed from "@/components/amenities/AmenitiesDetailed";
 import ComfortsSection from "@/components/amenities/ComfortsSection";
 import AmenitiesTable from "@/components/amenities/AmenitiesTable";
 import AmenitiesBookingBand from "@/components/amenities/AmenitiesBookingBand";
+import { getBreadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Facilities & Guest Amenities \u2014 Brookside Motel, Rolleston",
@@ -13,8 +14,17 @@ export const metadata: Metadata = {
 };
 
 export default function AmenitiesPage() {
+  const breadcrumbJsonLd = getBreadcrumbJsonLd([
+    { name: "Home", url: "/" },
+    { name: "Amenities", url: "/amenities" },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PageHero
         src="/images/facilities-hero.jpg"
         alt="Guest facilities at Brookside Motel"
