@@ -261,16 +261,13 @@ export function getResidenceJsonLd(residence: {
       longitude: 172.382,
     },
     numberOfRooms: residence.bedrooms,
-    numberOfBathroomsTotal: residence.bathrooms,
-    maximumOccupancy: {
-      "@type": "QuantitativeValue",
-      maxValue: residence.occupancy,
-    },
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: "Private Outdoor Spa", value: true },
       { "@type": "LocationFeatureSpecification", name: "BBQ Area", value: true },
       { "@type": "LocationFeatureSpecification", name: "Free Wi-Fi", value: true },
       { "@type": "LocationFeatureSpecification", name: "Free Parking", value: true },
+      { "@type": "LocationFeatureSpecification", name: `Sleeps up to ${residence.occupancy} guests`, value: true },
+      { "@type": "LocationFeatureSpecification", name: `${residence.bathrooms} bathrooms`, value: true },
     ],
     checkinTime: "14:00",
     checkoutTime: "10:00",
