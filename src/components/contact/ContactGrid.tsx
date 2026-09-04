@@ -39,6 +39,7 @@ export default function ContactGrid() {
                   <a className="c-v" href={PHONE_TEL}>
                     +64 3 930 0060
                   </a>
+                  <br/>
                   <span className="c-v" style={{ fontSize: "13.5px", color: "var(--sage-text)" }}>
                     Call for reservations or after-hours check-in
                   </span>
