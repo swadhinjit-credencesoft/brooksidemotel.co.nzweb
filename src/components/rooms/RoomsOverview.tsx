@@ -10,7 +10,7 @@ export default function RoomsOverview() {
         <div className="intro-block rv">
           <p className="eyebrow">Every room</p>
           <p className="lead">
-             every room at Brookside Motel is thoughtfully built for solid
+             Brookside Motel is thoughtfully built for solid
             rest and effortless convenience. Whether you are a solo corporate traveller needing a
             quiet workspace, a couple on a weekend getaway, or a trade crew working locally, our
             modern rooms deliver a seamless stay.
@@ -22,7 +22,7 @@ export default function RoomsOverview() {
             <Ico name="shield" size={22} sw={1.6} />
           </div>
           <div className="perk-bar-body">
-            <b>Book Direct Perk</b>
+            <b> Direct Booking Perk</b>
             <p>
               Enjoy flexible cancellation policies and priority consideration for late check-out
               when you book directly on our website.

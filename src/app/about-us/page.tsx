@@ -9,7 +9,7 @@ import { getOrganizationJsonLd, getBreadcrumbJsonLd } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "About Brookside Motel \u2014 Rolleston, Canterbury",
   description:
-    "Opened October 2025. Brand-new luxury, genuinely clean rooms, and dependable hospitality in the heart of fast-growing Rolleston.",
+    " Brand-new luxury, genuinely clean rooms, and dependable hospitality in the heart of fast-growing Rolleston.",
 };
 
 export default function AboutUsPage() {

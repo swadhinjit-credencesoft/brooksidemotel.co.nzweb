@@ -8,11 +8,11 @@ export default function HomeHero() {
       <div className="hero-scrim"></div>
       <div className="hero-inner wrap">
         <div className="hero-copy">
-          <p className="hero-eyebrow"> Rolleston, Canterbury</p>
+          {/* <p className="hero-eyebrow"> Rolleston, Canterbury</p> */}
           <h1 className="display">
           Brand-New Motel Accommodation 
             <br />
-             in <em>Rolleston</em>
+             <em>in</em> <em>Rolleston</em>
           </h1>
           <p className="hero-sub">
           Modern, exceptionally clean rooms with free parking, fast Wi-Fi and easy motorway access — just 20 minutes from Christchurch Airport.

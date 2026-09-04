@@ -3,7 +3,7 @@ export default function ResidenceIdeal() {
     <section className="section bg-paper">
       <div className="wrap">
         <div className="sec-head center rv">
-          <p className="eyebrow">Ideal for</p>
+          {/* <p className="eyebrow">Ideal for</p> */}
           <h2 className="h1">Who loves BROOKSIDE RESIDENCE?</h2>
         </div>
         <div className="ideal rv">
