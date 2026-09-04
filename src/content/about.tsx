@@ -8,7 +8,7 @@ export const ABOUT_REASONS: AboutReason[] = [
   {
     icon: "hotel",
     title: "Brand-new standards",
-    description: "Opened in late 2025 with modern architecture, double glazing, heat pumps, and luxury Super King beds.",
+    description: " modern architecture, double glazing, heat pumps, and luxury Super King beds.",
   },
   {
     icon: "map",

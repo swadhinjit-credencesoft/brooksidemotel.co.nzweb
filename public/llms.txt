@@ -1,0 +1,65 @@
+# Brookside Motel
+
+> Brookside Motel is a brand-new, modern motel (opened October 2025) in Rolleston, Canterbury, New Zealand. It offers quiet, spotlessly clean motel rooms — plus a separate flagship 4-bedroom luxury residence called THE BROOKSIDE RESIDENCE. It is located 2 minutes from Rolleston town centre, directly by the motorway, and 20 minutes from Christchurch International Airport.
+
+## About the business
+
+- Brookside Motel is independently owned and operated. Bookings are handled directly by the motel, not a call centre, so guests deal with the property manager and avoid third-party booking fees.
+- The property is at 12 Brookside Road, Rolleston 7614, Canterbury, New Zealand (approximately 17 km by road from Christchurch Airport, 25 km from Christchurch CBD).
+- Contact: phone +64 3 930 0060 (in New Zealand: (03) 930 0060), email reservations@brooksidemotel.co.nz. Reception is open 7:00 AM – 7:00 PM daily; a self check-in key box is available after hours by calling management.
+- Check-in is available from 2:00 PM; check-out is by 10:00 AM. Direct guests receive priority consideration for late check-out and flexible cancellation, subject to availability.
+- The front desk is open 7:00 AM – 7:00 PM daily. Most units are ground-floor; the site provides free on-site and street parking suitable for cars, vans, and commercial vehicles.
+
+## Key facts
+
+- Number of motel units/rooms: 22, across six room types.
+- Every room includes ultra-fast Fibre Wi-Fi, a Smart TV with 20 Sky Channels and Freeview, climate control (heat pump / aircon), luxury toiletries, and free parking.
+- EV charging: Type 2 EV charging is available on-site for $25 overnight.
+- Guest laundry (washer & dryer) is available on request.
+- Online bookings are powered by SwiftBook; the booking engine redirects to an external SwiftBook property page. Room IDs required for booking URLs: superior-outdoor=225755, superior-interconnected=225756, deluxe-two-doubles=225757, deluxe-top-floor=225758, accessible-superking=225759, deluxe-one-double=232836.
+
+## Motel Rooms
+
+There are six motel room types. Each has its own page with photos, amenities, and a "check availability" booking link.
+
+- [Superior Super King – Private Patio](https://brooksidemotel.co.nz/motel-rooms/superior-outdoor): Best-seller, ground-floor, 2 guests, Super King bed, private outdoor courtyard seating.
+- [Superior Interconnected – With Sofa](https://brooksidemotel.co.nz/motel-rooms/superior-interconnected): 2–3 guests, Super King or twin setup plus sofa, flexible adjoining-room door for families/groups, work desk.
+- [Deluxe Room – 2 Double Beds](https://brooksidemotel.co.nz/motel-rooms/deluxe-two-doubles): Family-friendly, 2–4 guests, two double beds, kitchenette, full ground-floor accessibility.
+- [Deluxe Top Floor – Super King](https://brooksidemotel.co.nz/motel-rooms/deluxe-top-floor): 2 guests, Super King bed, quiet top-floor position with elevated views.
+- [Accessible Deluxe – Super King](https://brooksidemotel.co.nz/motel-rooms/accessible-superking): Purpose-built disability access, level ground-floor entry, roll-in shower with handrails, wide doorways, 2 guests.
+- [Deluxe Room – 1 Double Bed](https://brooksidemotel.co.nz/motel-rooms/deluxe-one-double): 1–2 guests, one double bed, kitchenette, ground floor; ideal for solo travellers or couples.
+
+- [All motel rooms & unit types](https://brooksidemotel.co.nz/motel-rooms): Overview of the six room types.
+
+## THE BROOKSIDE RESIDENCE
+
+- [THE BROOKSIDE RESIDENCE](https://brooksidemotel.co.nz/brookside-residence): The flagship 4-bedroom luxury home on-site, sleeping up to 8 adults, with 3 bathrooms, an 85-inch Smart TV lounge, a private outdoor spa, and a BBQ area. Booked separately from the motel rooms.
+
+## Facilities & amenities
+
+- [Facilities & guest amenities](https://brooksidemotel.co.nz/amenities): EV charging ($25 overnight), free on-site/street parking, ultra-fast Fibre Wi-Fi, Smart TV with 20 Sky Channels & Freeview, climate control, and guest laundry. Includes a facility comparison table.
+
+## Local guide & blog
+
+- [Blog & local guide](https://brooksidemotel.co.nz/local-guide): Where to eat in Rolleston, why the motel suits corporate travellers, and how to plan a stress-free Christchurch Airport stopover.
+
+## FAQ & policies
+
+- [FAQ & guest policies](https://brooksidemotel.co.nz/faq): Check-in/check-out times, late check-out, after-hours and self check-in, parking and EV charging, smoking and pet policies, and in-room amenities.
+
+## Company & location
+
+- [About Brookside Motel](https://brooksidemotel.co.nz/about-us): Brand-new, genuinely clean rooms and dependable hospitality in fast-growing Rolleston (opened October 2025).
+- [Contact us & location](https://brooksidemotel.co.nz/contact): 12 Brookside Road, Rolleston 7614, driving times to the airport and CBD, and contact details.
+
+## Bookings
+
+- Bookings for the motel and residence are handled online via SwiftBook; the motel's booking pages redirect to the SwiftBook property engine.
+- [Book a motel room](https://brooksidemotel.co.nz/book): Redirects to the online booking engine.
+- [Book THE BROOKSIDE RESIDENCE](https://brooksidemotel.co.nz/book-residence): Redirects to the residence booking engine.
+- [Manage your booking](https://brooksidemotel.co.nz/manage-booking): View, modify, or cancel a reservation.
+
+## Optional
+
+- Structured data: the site includes schema.org JSON-LD markup including a Motel/LodgingBusiness entity on the homepage, ItemList on the rooms index, per-room HotelRoom entities, FAQPage on the FAQ page, and VacationRental for the residence.
+- Canonical host: brooksidemotel.co.nz (HTTPS). A sitemap is available at https://brooksidemotel.co.nz/sitemap.xml and robots.txt at https://brooksidemotel.co.nz/robots.txt.

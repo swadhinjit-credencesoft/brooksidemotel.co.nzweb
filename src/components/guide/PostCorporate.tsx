@@ -34,7 +34,7 @@ export default function PostCorporate() {
         Positioned right alongside the Christchurch Southern Motorway, Rolleston provides the
         perfect strategic middle ground: immediate connectivity to major commercial hubs
         without the delays of inner-city traffic, paid parking hassles, or cramped hotel
-        rooms. Opened in October 2025, Brookside Motel is purpose-built to give corporate
+        rooms. Brookside Motel is purpose-built to give corporate
         guests a frictionless, restful base.
       </p>
 
@@ -96,8 +96,7 @@ export default function PostCorporate() {
 
       <h3>4. Deep rest &amp; flexible after-hours arrival</h3>
       <p>
-        A good night&apos;s sleep is non-negotiable before an important meeting. Opened in
-        late 2025, our rooms feature brand-new double glazing, guest-controlled heat pumps and
+        A good night&apos;s sleep is non-negotiable before an important meeting., our rooms feature brand-new double glazing, guest-controlled heat pumps and
         air conditioning, and high-end Super King beds with luxury linens.
       </p>
       <p>

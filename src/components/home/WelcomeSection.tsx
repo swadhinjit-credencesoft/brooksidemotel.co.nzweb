@@ -38,7 +38,7 @@ export default function WelcomeSection() {
             </h2>
             <p className="lead" style={{ marginTop: "var(--s3)" }}>
               At Brookside Motel, our philosophy is simple: nail the essentials, every time.
-              Opened in October 2025, we offer brand-new, genuinely clean, and modern rooms
+               we offer brand-new, genuinely clean, and modern rooms
               designed around deep rest and effortless convenience.
             </p>
             <p style={{ color: "var(--sage-text)", marginTop: "var(--s3)" }}>
