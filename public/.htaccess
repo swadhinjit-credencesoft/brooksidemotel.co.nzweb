@@ -30,6 +30,9 @@
   RewriteRule ^ %1 [L,R=301]
 </IfModule>
 
+# Custom 404 page (served for any missing URL)
+ErrorDocument 404 /404.html
+
 # Defense against directory listing
 Options -Indexes
 
